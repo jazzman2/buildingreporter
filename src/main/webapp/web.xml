@@ -7,9 +7,9 @@
 		http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
     
-    <display-name>builderreporter</display-name>
+    <display-name>buildingreporter</display-name>
     
-    <description>Roo generated builder reporter application</description>
+    <description>Roo generated building reporter application</description>
 
     
     <!-- Enable escaping of form submission contents -->
