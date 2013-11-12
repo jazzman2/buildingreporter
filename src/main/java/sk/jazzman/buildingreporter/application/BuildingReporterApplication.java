@@ -9,7 +9,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -20,12 +19,11 @@ import sk.jazzman.buildingreporter.web.HomePage;
  * @author jkovalci
  * 
  */
-@Component(value = "wicketApplication")
+@Component(value = "application")
 public class BuildingReporterApplication extends WebApplication implements Serializable, ApplicationContextAware {
 	/** Serial id */
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
 	private ApplicationContext applicationContext;
 
 	@Override
@@ -41,10 +39,8 @@ public class BuildingReporterApplication extends WebApplication implements Seria
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext arg0) throws BeansException {
-		super.setApplicationContext(arg0);
-
-		this.ctx = arg0;
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	@Override
