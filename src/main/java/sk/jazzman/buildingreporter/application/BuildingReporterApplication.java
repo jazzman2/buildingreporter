@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import sk.jazzman.buildingreporter.web.HomePage;
+import sk.jazzman.buildingreporter.web.DashboardPage;
 
 /**
  * @author jkovalci
@@ -59,6 +59,6 @@ public class BuildingReporterApplication extends WebApplication implements Seria
 
 	@Override
 	public Class<? extends Page> getHomePage() {
-		return HomePage.class;
+		return DashboardPage.class;
 	}
 }

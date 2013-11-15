@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <croot>
 
+	<!-- Jednotky -->
+	<munits>
+		<unit>
+			<name>celsius</name>
+			<value>10</value>
+		</unit>
+		<unit>
+			<name>kelvin</name>
+			<value>11</value>
+		</unit>
+		<unit>
+			<name>fahrenheit</name>
+			<value>12</value>
+		</unit>
+
+	</munits>
+
+	<!-- Skupiny jednotiek -->
+	<munit_groups>
+		<munit_group>
+			<name>temperature</name>
+			<munits>
+				<munit>
+					<name>celsius</name>
+				</munit>
+			</munits>
+		</munit_group>
+	</munit_groups>
+	
+	<!-- Parametre meracich jednotiek -->
+	<aparameters>
+		<aparameter>
+			<name>ip_address</name>
+			<value>1</value>
+			<class>java.lang.String</class>
+		</aparameter>
+	</aparameters>
 </croot>
