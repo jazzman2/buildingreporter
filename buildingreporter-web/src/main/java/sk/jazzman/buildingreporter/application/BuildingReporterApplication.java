@@ -5,7 +5,7 @@ package sk.jazzman.buildingreporter.application;
 
 import java.io.Serializable;
 
-import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.BeansException;
@@ -35,14 +35,14 @@ public class BuildingReporterApplication extends WebApplication implements Seria
 		getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext, true));
 
 		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
-        getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
- 
-                  getMarkupSettings().setStripWicketTags(true);
-            getMarkupSettings().setStripComments(true);
-            getMarkupSettings().setCompressWhitespace(true);
-        
+		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+
+		getMarkupSettings().setStripWicketTags(true);
+		getMarkupSettings().setStripComments(true);
+		getMarkupSettings().setCompressWhitespace(true);
+
 	}
-	
+
 	/**
 	 * Application getter
 	 * 
@@ -58,7 +58,7 @@ public class BuildingReporterApplication extends WebApplication implements Seria
 	}
 
 	@Override
-	public Class<? extends Page> getHomePage() {
+	public Class<? extends WebPage> getHomePage() {
 		return DashboardPage.class;
 	}
 }
