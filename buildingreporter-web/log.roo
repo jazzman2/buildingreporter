@@ -15,3 +15,4 @@ field string --fieldName name --notNull --sizeMin 2
 focus --class ~.domain.building.BPart 
 field reference --fieldName type --type ~.domain.building.BType --notNull --cardinality MANY_TO_ONE 
 // Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-10-31 15:33:31
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-11-18 15:01:08

@@ -59,6 +59,12 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
+		<dependency>
+			<groupId>sk.jazzman.buildingreporter</groupId>
+			<artifactId>buildingreporter-domain</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	
 		<!-- General dependencies for standard applications -->
 		<dependency>
 			<groupId>junit</groupId>

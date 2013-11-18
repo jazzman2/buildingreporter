@@ -22,7 +22,9 @@
 
 	<modules>
 		<module>buildingreporter-web</module>
-	
+
+		<module>buildingreporter-ma</module>
+		<module>buildingreporter-domain</module>
 	</modules>	
 
 	<build>

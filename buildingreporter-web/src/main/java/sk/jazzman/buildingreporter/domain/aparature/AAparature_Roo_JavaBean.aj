@@ -8,7 +8,7 @@ import sk.jazzman.buildingreporter.domain.building.BPart;
 
 privileged aspect AAparature_Roo_JavaBean {
     
-    public Number AAparature.getId() {
+    public Long AAparature.getId() {
         return this.id;
     }
     
