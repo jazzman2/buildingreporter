@@ -1,7 +1,6 @@
 package sk.jazzman.buildingreporter.domain.aparature;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,13 +15,9 @@ import sk.jazzman.buildingreporter.domain.building.BPart;
 @RooToString
 @RooJpaActiveRecord
 public class AAparature implements AAparatureInf {
+
 	/** Serial id */
 	private static final long serialVersionUID = 1L;
-
-	@NotNull
-	@Column(unique = true)
-	@Id
-	private Long id;
 
 	@NotNull
 	@Column(unique = true)
@@ -33,4 +28,9 @@ public class AAparature implements AAparatureInf {
 	@ManyToOne
 	private BPart part;
 
+	/**
+     */
+	@NotNull
+	@Column(unique = true)
+	private Long id;
 }
