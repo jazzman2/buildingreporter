@@ -8,6 +8,26 @@
 	</parent>
 	<artifactId>buildingreporter-ma</artifactId>
 	<name>BuildingReporterMA</name>
+	<version>0.1.0.BUILD-SNAPSHOT</version>
 	<description>Building Reporter Measure Adapter</description>
+	<packaging>jar</packaging>
 	
+	<dependencies>
+		<dependency>
+			<groupId>sk.jazzman.buildingreporter</groupId>
+			<artifactId>buildingreporter-domain</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<!-- <configuration> <webXml>target/web.xml</webXml> </configuration> -->
+			</plugin>
+		</plugins>
+	</build>
 </project>
