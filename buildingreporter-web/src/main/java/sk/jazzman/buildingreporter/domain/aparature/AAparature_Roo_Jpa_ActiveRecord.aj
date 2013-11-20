@@ -28,9 +28,9 @@ privileged aspect AAparature_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM AAparature o", AAparature.class).getResultList();
     }
     
-    public static AAparature AAparature.findAAparature(Number id) {
-        if (id == null) return null;
-        return entityManager().find(AAparature.class, id);
+    public static AAparature AAparature.findAAparature(Long id_) {
+        if (id_ == null) return null;
+        return entityManager().find(AAparature.class, id_);
     }
     
     public static List<AAparature> AAparature.findAAparatureEntries(int firstResult, int maxResults) {
@@ -49,7 +49,7 @@ privileged aspect AAparature_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            AAparature attached = AAparature.findAAparature(this.id);
+            AAparature attached = AAparature.findAAparature(this.id_);
             this.entityManager.remove(attached);
         }
     }

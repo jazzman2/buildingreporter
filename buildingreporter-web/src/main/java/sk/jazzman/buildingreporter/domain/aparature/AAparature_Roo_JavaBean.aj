@@ -8,14 +8,6 @@ import sk.jazzman.buildingreporter.domain.building.BPart;
 
 privileged aspect AAparature_Roo_JavaBean {
     
-    public Long AAparature.getId() {
-        return this.id;
-    }
-    
-    public void AAparature.setId(Number id) {
-        this.id = id;
-    }
-    
     public String AAparature.getName() {
         return this.name;
     }
@@ -30,6 +22,14 @@ privileged aspect AAparature_Roo_JavaBean {
     
     public void AAparature.setPart(BPart part) {
         this.part = part;
+    }
+    
+    public Long AAparature.getId() {
+        return this.id;
+    }
+    
+    public void AAparature.setId(Long id) {
+        this.id = id;
     }
     
 }

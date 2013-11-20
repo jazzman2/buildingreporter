@@ -15,10 +15,8 @@ public class AParameter implements AParameterInf {
 	/** Serial id */
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
-	@Column(unique = true)
-	private Long id;
-
+	
+	
 	@NotNull
 	private String paramName;
 
