@@ -9,7 +9,7 @@ package sk.jazzman.buildingreporter.application;
  */
 public class Application {
 	public static void main(String[] args) {
-		new MeasureAparatureApplication();
+		new MeasureInstrumentApplication();
 
 		Thread t = new Thread() {
 			@Override

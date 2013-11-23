@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<!-- <groupId>sk.jazzman.buildingreporter</groupId> -->
 	<artifactId>buildingreporter-web</artifactId>
@@ -7,7 +8,6 @@
 	<packaging>war</packaging>
 	<!-- <version>0.1.0.BUILD-SNAPSHOT</version> -->
 	<name>BuildingReporterWeb</name>
-	
 
 	<parent>
 		<artifactId>buildingreporter</artifactId>
@@ -294,6 +294,19 @@
 			<artifactId>wicked-charts-wicket6</artifactId>
 			<version>1.5.0</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>
@@ -435,17 +448,17 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<version>1.1</version>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.mortbay.jetty</groupId> -->
-<!-- 				<artifactId>jetty-maven-plugin</artifactId> -->
-<!-- 				<version>8.1.4.v20120524</version> -->
-<!-- 				<configuration> -->
-<!-- 					<webAppConfig> -->
-<!-- 						<contextPath>/${project.name}</contextPath> -->
-<!-- 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames> -->
-<!-- 					</webAppConfig> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.mortbay.jetty</groupId> -->
+			<!-- <artifactId>jetty-maven-plugin</artifactId> -->
+			<!-- <version>8.1.4.v20120524</version> -->
+			<!-- <configuration> -->
+			<!-- <webAppConfig> -->
+			<!-- <contextPath>/${project.name}</contextPath> -->
+			<!-- <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames> -->
+			<!-- </webAppConfig> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
 		</plugins>
 
 		<pluginManagement>
@@ -470,7 +483,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute/>
+										<execute />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

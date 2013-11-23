@@ -4,7 +4,7 @@
 package sk.jazzman.buildingreporter.domain.measurement;
 
 import java.util.Date;
-import sk.jazzman.buildingreporter.domain.aparature.AAparature;
+import sk.jazzman.buildingreporter.domain.instrument.Instrument;
 import sk.jazzman.buildingreporter.domain.measurement.MLog;
 import sk.jazzman.buildingreporter.domain.measurement.MUnit;
 
@@ -58,11 +58,11 @@ privileged aspect MLog_Roo_JavaBean {
         this.unitMeasured = unitMeasured;
     }
     
-    public AAparature MLog.getAparature() {
+    public Instrument MLog.getAparature() {
         return this.aparature;
     }
     
-    public void MLog.setAparature(AAparature aparature) {
+    public void MLog.setAparature(Instrument aparature) {
         this.aparature = aparature;
     }
     
