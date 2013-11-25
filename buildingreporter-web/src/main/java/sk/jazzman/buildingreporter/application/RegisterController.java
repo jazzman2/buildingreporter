@@ -6,7 +6,7 @@ package sk.jazzman.buildingreporter.application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,13 +21,16 @@ public class RegisterController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public @ResponseBody
-	String getRegister(@PathVariable String name) {
+	String getRegister(@RequestBody String configuration) {
 
-		logger.debug("Name " + name);
+		if (configuration != null) {
+			logger.debug("Name " + configuration);
+		} else {
+			logger.error("Null object!");
+		}
 
 		return "registered";
 	}
-
 }

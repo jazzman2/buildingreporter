@@ -61,7 +61,7 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 	public ClientResponse performRequest(Client client, Map<String, Object> actionParams, Map<String, Object> systemParams) throws Exception {
 		String servletUrl = ServerConfigurationHelper.getServerURL(systemParams);
 
-		URI uri = UriBuilder.fromUri(servletUrl + getName() + "/asdas").build();
+		URI uri = UriBuilder.fromUri(servletUrl + getName() + "/register").build();
 
 		WebResource resource = client.resource(uri);
 

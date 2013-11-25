@@ -4,6 +4,9 @@
 package sk.jazzman.buildingreporter.application;
 
 import java.lang.reflect.Constructor;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,9 +66,12 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 	}
 
 	@Override
-	public void registerConfigurationHandler() {
+	public void registerConfigurationHandler() throws Exception {
 		configuration = new HashMap<String, Object>();
 		configuration.put(ServerConfigurationHelper.SERVER_URL, "http://localhost:8080/buildingreporter-web/mi");
+		configuration.put(ApplicationConfigurationHelper.MEASURE_INSTRUMENT_NAME, "mi_test");
+		configuration.put(ApplicationConfigurationHelper.MEASURE_INSTRUMENT_MAC_ADDRESS, getMacAddress());
+		configuration.put(ApplicationConfigurationHelper.MEASURE_INSTRUMENT_IP_ADDRESS, getIpAddress());
 	}
 
 	public void registerArduinoHandlers() {
@@ -93,5 +99,38 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 	 */
 	public ServerActionHandlerInf getServerActionHandler() {
 		return serverActionHandler;
+	}
+
+	/**
+	 * Return mac address
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private String getMacAddress() throws Exception {
+		InetAddress ip = InetAddress.getLocalHost();
+
+		Enumeration<NetworkInterface> ifcs = NetworkInterface.getNetworkInterfaces();
+
+		byte[] mac = null;
+
+		while (ifcs.hasMoreElements()) {
+			mac = ifcs.nextElement().getHardwareAddress();
+			break;
+		}
+
+		return new String(mac != null ? mac : new byte[] {});
+	}
+
+	/**
+	 * Return ip address
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private String getIpAddress() throws Exception {
+		InetAddress ip = InetAddress.getLocalHost();
+
+		return ip.getHostAddress();
 	}
 }

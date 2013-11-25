@@ -4,13 +4,13 @@
 package sk.jazzman.buildingreporter.application;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.buildingreporter.server.ServerActionHandlerInf;
+import sk.jazzman.buildingreporter.server.ws.RegisterMeasureInstrumnet;
 
 /**
  * @author jkovalci
@@ -75,16 +75,22 @@ public class ServerConnectionThread extends Thread {
 	public void run() {
 		super.run();
 
-		for (int index = 1; index < 100; index++) {
-			ping();
+		if (getServerActionHandler() != null && getConfiguration() != null) {
 
-			try {
-				sleep(10000l);
-			} catch (InterruptedException e) {
-				getLogger().debug(" sleep error", e);
-				return;
+			for (int index = 1; index < 100; index++) {
+				ping();
+
+				try {
+					sleep(10000l);
+				} catch (InterruptedException e) {
+					getLogger().debug(" sleep error", e);
+					return;
+				}
 			}
+		} else {
+			getLogger().error("Not initialyzed yet.");
 		}
+
 	}
 
 	/**
@@ -92,8 +98,9 @@ public class ServerConnectionThread extends Thread {
 	 */
 	protected void ping() {
 		try {
+
 			getLogger().debug(" ping server ...");
-			getServerActionHandler().call("/register", new HashMap<String, Object>());
+			getServerActionHandler().call("/register", new RegisterMeasureInstrumnet.ParamBuilder().setConfiguration(getConfiguration()).build());
 			getLogger().debug(" ping server done ...");
 		} catch (Exception e) {
 			getLogger().error("ping server failed", e);

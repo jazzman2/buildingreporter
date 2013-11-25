@@ -16,6 +16,6 @@ public interface MeasureInstrumentInf {
 	/**
 	 * Register Configuration Handler
 	 */
-	public void registerConfigurationHandler();
+	public void registerConfigurationHandler() throws Exception;
 
 }
