@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.domain.aparature;
+package sk.jazzman.buildingreporter.domain.instrument;
 
 import sk.jazzman.buildingreporter.domain.BREntityInf;
 

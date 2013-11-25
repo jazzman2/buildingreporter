@@ -4,21 +4,18 @@
 package sk.jazzman.buildingreporter.server;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPConnection;
-import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.handler.soap.SOAPHandler;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sk.jazzman.buildingreporter.server.soap.SOAPServerActionInf;
+import sk.jazzman.buildingreporter.server.ws.RESTServerActionInf;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
  * Web Service Server Action Handler
@@ -26,11 +23,11 @@ import sk.jazzman.buildingreporter.server.soap.SOAPServerActionInf;
  * @author jano
  * 
  */
-public class WSServerActionHandler implements ServerActionHandlerInf, SOAPHandler<SOAPMessageContext> {
+public class WSServerActionHandler implements ServerActionHandlerInf {
 
 	private static final Logger logger = LoggerFactory.getLogger(WSServerActionHandler.class);
 	private ServerActionRegisterInf actionRegister;
-	private SOAPConnection connection;
+	private Client client;
 	private final Map<String, Object> configuration;
 
 	/**
@@ -69,12 +66,12 @@ public class WSServerActionHandler implements ServerActionHandlerInf, SOAPHandle
 	}
 
 	/**
-	 * Return SOAP Connection
+	 * Return REST Client
 	 * 
 	 * @return
 	 */
-	private SOAPConnection getConnection() {
-		return connection;
+	private Client getClient() {
+		return client;
 	}
 
 	/**
@@ -86,40 +83,31 @@ public class WSServerActionHandler implements ServerActionHandlerInf, SOAPHandle
 	private void init(Map<String, Object> configuration) throws Exception {
 		actionRegister = new DefaultActionRegister();
 
-		SOAPConnectionFactory soapConnectonFactory = SOAPConnectionFactory.newInstance();
-		connection = soapConnectonFactory.createConnection();
+		ClientConfig config = new DefaultClientConfig();
+
+		client = Client.create(config);
 	}
 
 	@Override
 	public Map<String, Object> call(String actionName, Map<String, Object> actionParams) throws Exception {
-		SOAPServerActionInf action = (SOAPServerActionInf) getActionRegister().getAction(actionName);
+		RESTServerActionInf action = (RESTServerActionInf) getActionRegister().getAction(actionName);
 
-		SOAPMessage response = getConnection().call(action.createRequest(actionParams), ServerConfigurationHelper.getServerURL(getConfiguration()));
+		Map<String, Object> systemParams = createSystemParams();
+
+		ClientResponse response = action.performRequest(getClient(), actionParams, systemParams);
 
 		return action.handleResponse(response);
 	}
 
-	@Override
-	public boolean handleMessage(SOAPMessageContext context) {
-		// TODO Auto-generated method stub
-		return false;
+	/**
+	 * Build System Parameters
+	 * 
+	 * @return
+	 */
+	protected Map<String, Object> createSystemParams() {
+		Map<String, Object> retVal = new HashMap<String, Object>();
+
+		return retVal;
 	}
 
-	@Override
-	public boolean handleFault(SOAPMessageContext context) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void close(MessageContext context) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Set<QName> getHeaders() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

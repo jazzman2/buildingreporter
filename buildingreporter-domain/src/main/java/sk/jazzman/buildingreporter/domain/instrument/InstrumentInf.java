@@ -1,4 +1,4 @@
-package sk.jazzman.buildingreporter.domain.aparature;
+package sk.jazzman.buildingreporter.domain.instrument;
 
 import sk.jazzman.buildingreporter.domain.BREntityInf;
 
@@ -9,6 +9,6 @@ import sk.jazzman.buildingreporter.domain.BREntityInf;
  * @author jkovalci
  * 
  */
-public interface AAparatureInf extends BREntityInf {
+public interface InstrumentInf extends BREntityInf {
 
 }
