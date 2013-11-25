@@ -4,12 +4,17 @@
 package sk.jazzman.buildingreporter.application;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.buildingreporter.arduino.ArduinoManagerInf;
 import sk.jazzman.buildingreporter.arduino.DefaultArduinoActionManager;
+import sk.jazzman.buildingreporter.server.ServerActionHandlerInf;
+import sk.jazzman.buildingreporter.server.ServerConfigurationHelper;
+import sk.jazzman.buildingreporter.server.ws.WSServerActionHandler;
 
 /**
  * @author jkovalci
@@ -18,6 +23,8 @@ import sk.jazzman.buildingreporter.arduino.DefaultArduinoActionManager;
 public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 
 	private ArduinoManagerInf arduinoManager;
+	private ServerActionHandlerInf serverActionHandler;
+	private Map<String, Object> configuration;
 
 	private static final Logger logger = LoggerFactory.getLogger(MeasureInstrumentApplication.class);
 
@@ -25,7 +32,7 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 	 * {@link Constructor}
 	 */
 	public MeasureInstrumentApplication() {
-		init();
+
 	}
 
 	/**
@@ -37,7 +44,31 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 		return logger;
 	}
 
-	private void init() {
+	/**
+	 * Init Application
+	 */
+	public void init() throws Exception {
+		registerConfigurationHandler();
+		registerServerHandlers();
+		registerArduinoHandlers();
+	}
+
+	@Override
+	public void registerServerHandlers() throws Exception {
+		Map<String, Object> config = new HashMap<String, Object>();
+		config.putAll(getConfiguration());
+
+		serverActionHandler = new WSServerActionHandler();
+		serverActionHandler.init(config);
+	}
+
+	@Override
+	public void registerConfigurationHandler() {
+		configuration = new HashMap<String, Object>();
+		configuration.put(ServerConfigurationHelper.SERVER_URL, "http://localhost:8080/buildingreporter-web/mi");
+	}
+
+	public void registerArduinoHandlers() {
 		arduinoManager = new DefaultArduinoActionManager();
 		try {
 			((DefaultArduinoActionManager) arduinoManager).init();
@@ -46,16 +77,21 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 		}
 	}
 
-	@Override
-	public void registerServerHandlers() {
-		// TODO Auto-generated method stub
-
+	/**
+	 * Return configuration
+	 * 
+	 * @return
+	 */
+	public Map<String, Object> getConfiguration() {
+		return configuration;
 	}
 
-	@Override
-	public void registerConfigurationHandler() {
-		// TODO Auto-generated method stub
-
+	/**
+	 * Getter Server Action Handler
+	 * 
+	 * @return
+	 */
+	public ServerActionHandlerInf getServerActionHandler() {
+		return serverActionHandler;
 	}
-
 }

@@ -36,4 +36,13 @@ public interface ServerActionHandlerInf {
 	 * @throws Exception
 	 */
 	public Map<String, Object> call(String actionName, Map<String, Object> actionParams) throws Exception;
+
+	/**
+	 * Initialize Server Action Handler
+	 * 
+	 * @param configuration
+	 * 
+	 * @throws Exception
+	 */
+	public void init(Map<String, Object> configuration) throws Exception;
 }

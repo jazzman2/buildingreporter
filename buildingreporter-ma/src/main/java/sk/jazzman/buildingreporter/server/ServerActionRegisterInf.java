@@ -23,4 +23,10 @@ public interface ServerActionRegisterInf {
 	 * @return
 	 */
 	public ServerActionInf getAction(String name);
+
+	/**
+	 * Register Actions
+	 * 
+	 */
+	public void registerActions() throws Exception;
 }

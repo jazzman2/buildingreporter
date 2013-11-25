@@ -1,10 +1,14 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.server;
+package sk.jazzman.buildingreporter.server.ws;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+
+import sk.jazzman.buildingreporter.server.ServerActionInf;
+import sk.jazzman.buildingreporter.server.ServerActionRegisterInf;
 
 /**
  * Default Server Action Register
@@ -15,6 +19,22 @@ import java.util.Map;
 public class DefaultActionRegister implements ServerActionRegisterInf {
 
 	private final Map<String, ServerActionInf> register = new HashMap<String, ServerActionInf>();
+
+	/**
+	 * {@link Constructor}
+	 * 
+	 */
+	public DefaultActionRegister() {
+
+	}
+
+	/**
+	 * Register Actions
+	 */
+	@Override
+	public void registerActions() throws Exception {
+		registerAction(RegisterMeasureInstrumnet.getName(), new RegisterMeasureInstrumnet());
+	}
 
 	@Override
 	public void registerAction(String name, ServerActionInf action) {
