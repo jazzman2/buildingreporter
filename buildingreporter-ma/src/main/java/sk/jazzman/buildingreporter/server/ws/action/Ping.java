@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.server.ws;
+package sk.jazzman.buildingreporter.server.ws.action;
 
 import java.util.Map;
 
@@ -10,7 +10,8 @@ import javax.ws.rs.core.UriBuilder;
 
 import sk.jazzman.buildingreporter.server.ServerActionInf;
 import sk.jazzman.buildingreporter.server.ServerConfigurationHelper;
-import sk.jazzman.buildingreporter.server.ws.RegisterMeasureInstrumnet.ParamGetter;
+import sk.jazzman.buildingreporter.server.ws.RESTServerActionInf;
+import sk.jazzman.buildingreporter.server.ws.action.RegisterMeasureInstrumnet.ParamGetter;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;

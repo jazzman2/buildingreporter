@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.server;
+package sk.jazzman.brmi.common;
 
 import java.util.Map;
 
@@ -11,14 +11,14 @@ import java.util.Map;
  * @author jkovalci
  * 
  */
-public interface ServerActionHandlerInf {
+public interface ActionHandlerInf<A extends ActionInf> {
 
 	/**
 	 * Action Register
 	 * 
 	 * @return
 	 */
-	public ServerActionRegisterInf getActionRegister();
+	public ActionRegisterInf<A> getActionRegister();
 
 	/**
 	 * Return configuration of action handler
@@ -28,17 +28,17 @@ public interface ServerActionHandlerInf {
 	public Map<String, Object> getConfiguration();
 
 	/**
-	 * Call Action On Server
+	 * Call Action
 	 * 
 	 * @param actionName
 	 * @param actionParams
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> call(String actionName, Map<String, Object> actionParams) throws Exception;
+	public Map<String, Object> perform(String actionName, Map<String, Object> actionParams) throws Exception;
 
 	/**
-	 * Initialize Server Action Handler
+	 * Initialize Action Handler
 	 * 
 	 * @param configuration
 	 * 

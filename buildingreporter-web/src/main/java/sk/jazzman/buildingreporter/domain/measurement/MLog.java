@@ -18,30 +18,33 @@ import sk.jazzman.buildingreporter.domain.instrument.Instrument;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class MLog {
+public class MLog implements MLogInf {
 
-    @NotNull
-    @Column(unique = true)
-    private Long id;
+	/** serial id */
+	private static final long serialVersionUID = 1L;
 
-    @NotNull
-    private Long valueMeasured;
+	@NotNull
+	@Column(unique = true)
+	private Long id;
 
-    private Long valueTransformed;
+	@NotNull
+	private Long valueMeasured;
 
-    @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(style = "M-")
-    private Date logDate;
+	private Long valueTransformed;
 
-    @ManyToOne
-    private MUnit unitTransformed;
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(style = "M-")
+	private Date logDate;
 
-    @NotNull
-    @ManyToOne
-    private MUnit unitMeasured;
+	@ManyToOne
+	private MUnit unitTransformed;
 
-    @NotNull
-    @ManyToOne
-    private Instrument aparature;
+	@NotNull
+	@ManyToOne
+	private MUnit unitMeasured;
+
+	@NotNull
+	@ManyToOne
+	private Instrument aparature;
 }

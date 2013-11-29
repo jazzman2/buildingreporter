@@ -1,4 +1,5 @@
-package sk.jazzman.buildingreporter.server;
+package sk.jazzman.brmi.common;
+
 
 /**
  * Server Action Register
@@ -6,7 +7,7 @@ package sk.jazzman.buildingreporter.server;
  * @author jkovalci
  * 
  */
-public interface ServerActionRegisterInf {
+public interface ActionRegisterInf<A extends ActionInf> {
 
 	/**
 	 * Register Action
@@ -14,7 +15,7 @@ public interface ServerActionRegisterInf {
 	 * @param name
 	 * @param action
 	 */
-	public void registerAction(String name, ServerActionInf action);
+	public void registerAction(String name, A action);
 
 	/**
 	 * Get Action
@@ -22,7 +23,7 @@ public interface ServerActionRegisterInf {
 	 * @param name
 	 * @return
 	 */
-	public ServerActionInf getAction(String name);
+	public A getAction(String name);
 
 	/**
 	 * Register Actions

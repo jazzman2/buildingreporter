@@ -9,8 +9,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sk.jazzman.buildingreporter.server.ServerActionHandlerInf;
-import sk.jazzman.buildingreporter.server.ws.RegisterMeasureInstrumnet;
+import sk.jazzman.brmi.common.ActionHandlerInf;
+import sk.jazzman.buildingreporter.server.ws.action.RegisterMeasureInstrumnet;
 
 /**
  * @author jkovalci
@@ -20,7 +20,7 @@ public class ServerConnectionThread extends Thread {
 
 	private static final Logger log = LoggerFactory.getLogger(ServerConnectionThread.class);
 
-	private ServerActionHandlerInf serverActionHandler;
+	private ActionHandlerInf serverActionHandler;
 	private Map<String, Object> configuration;
 
 	/**
@@ -45,7 +45,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @param serverActionHandler
 	 */
-	public void setServerActionHandler(ServerActionHandlerInf serverActionHandler) {
+	public void setServerActionHandler(ActionHandlerInf serverActionHandler) {
 		this.serverActionHandler = serverActionHandler;
 	}
 
@@ -67,7 +67,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @return
 	 */
-	private ServerActionHandlerInf getServerActionHandler() {
+	private ActionHandlerInf getServerActionHandler() {
 		return serverActionHandler;
 	}
 
@@ -100,7 +100,7 @@ public class ServerConnectionThread extends Thread {
 		try {
 
 			getLogger().debug(" ping server ...");
-			getServerActionHandler().call("/register", new RegisterMeasureInstrumnet.ParamBuilder().setConfiguration(getConfiguration()).build());
+			getServerActionHandler().perform("/register", new RegisterMeasureInstrumnet.ParamBuilder().setConfiguration(getConfiguration()).build());
 			getLogger().debug(" ping server done ...");
 		} catch (Exception e) {
 			getLogger().error("ping server failed", e);

@@ -12,6 +12,10 @@
 	<description>Building Reporter Measure Adapter</description>
 	<packaging>jar</packaging>
 
+	<properties>
+		<hibernate-version>4.2.7.Final</hibernate-version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>sk.jazzman.buildingreporter</groupId>
@@ -60,6 +64,11 @@
 			<groupId>xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>${xstream-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate-version}</version>
 		</dependency>
 		
 	</dependencies>

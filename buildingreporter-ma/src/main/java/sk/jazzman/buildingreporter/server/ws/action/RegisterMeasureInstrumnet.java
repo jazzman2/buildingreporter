@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.server.ws;
+package sk.jazzman.buildingreporter.server.ws.action;
 
 import java.lang.reflect.Constructor;
 import java.net.URI;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import sk.jazzman.buildingreporter.server.ServerActionInf;
 import sk.jazzman.buildingreporter.server.ServerConfigurationHelper;
+import sk.jazzman.buildingreporter.server.ws.RESTServerActionInf;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;

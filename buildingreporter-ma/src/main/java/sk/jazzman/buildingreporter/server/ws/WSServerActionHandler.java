@@ -10,8 +10,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sk.jazzman.buildingreporter.server.ServerActionHandlerInf;
-import sk.jazzman.buildingreporter.server.ServerActionRegisterInf;
+import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
+import sk.jazzman.buildingreporter.server.ServerActionInf;
 import sk.jazzman.buildingreporter.server.ServerConfigurationHelper;
 
 import com.sun.jersey.api.client.Client;
@@ -25,12 +25,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  * @author jano
  * 
  */
-public class WSServerActionHandler implements ServerActionHandlerInf {
+public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionInf> {
 
 	private static final Logger logger = LoggerFactory.getLogger(WSServerActionHandler.class);
-	private ServerActionRegisterInf actionRegister;
 	private Client client;
-	private Map<String, Object> configuration;
 
 	/**
 	 * {@link Constructor}
@@ -50,16 +48,6 @@ public class WSServerActionHandler implements ServerActionHandlerInf {
 		return logger;
 	}
 
-	@Override
-	public ServerActionRegisterInf getActionRegister() {
-		return actionRegister;
-	}
-
-	@Override
-	public Map<String, Object> getConfiguration() {
-		return configuration;
-	}
-
 	/**
 	 * Return REST Client
 	 * 
@@ -77,13 +65,9 @@ public class WSServerActionHandler implements ServerActionHandlerInf {
 	 */
 	@Override
 	public void init(Map<String, Object> configuration) throws Exception {
-		if (configuration == null) {
-			throw new IllegalArgumentException("Null argument!");
-		}
+		super.init(configuration);
 
-		this.configuration = configuration;
-
-		actionRegister = new DefaultActionRegister();
+		actionRegister = new WSActionRegister();
 		actionRegister.registerActions();
 
 		ClientConfig config = new DefaultClientConfig();
@@ -92,7 +76,7 @@ public class WSServerActionHandler implements ServerActionHandlerInf {
 	}
 
 	@Override
-	public Map<String, Object> call(String actionName, Map<String, Object> actionParams) throws Exception {
+	public Map<String, Object> perform(String actionName, Map<String, Object> actionParams) throws Exception {
 		RESTServerActionInf action = (RESTServerActionInf) getActionRegister().getAction(actionName);
 
 		Map<String, Object> systemParams = createSystemParams();

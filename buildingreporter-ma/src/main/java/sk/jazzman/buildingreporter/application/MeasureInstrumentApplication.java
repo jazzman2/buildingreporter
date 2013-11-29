@@ -13,9 +13,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazzman.brmi.common.ActionHandlerInf;
 import sk.jazzman.buildingreporter.arduino.ArduinoManagerInf;
 import sk.jazzman.buildingreporter.arduino.DefaultArduinoActionManager;
-import sk.jazzman.buildingreporter.server.ServerActionHandlerInf;
 import sk.jazzman.buildingreporter.server.ServerConfigurationHelper;
 import sk.jazzman.buildingreporter.server.ws.WSServerActionHandler;
 
@@ -26,7 +26,7 @@ import sk.jazzman.buildingreporter.server.ws.WSServerActionHandler;
 public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 
 	private ArduinoManagerInf arduinoManager;
-	private ServerActionHandlerInf serverActionHandler;
+	private ActionHandlerInf serverActionHandler;
 	private Map<String, Object> configuration;
 
 	private static final Logger logger = LoggerFactory.getLogger(MeasureInstrumentApplication.class);
@@ -97,7 +97,7 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 	 * 
 	 * @return
 	 */
-	public ServerActionHandlerInf getServerActionHandler() {
+	public ActionHandlerInf getServerActionHandler() {
 		return serverActionHandler;
 	}
 
