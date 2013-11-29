@@ -18,4 +18,11 @@ public interface MeasureInstrumentInf {
 	 */
 	public void registerConfigurationHandler() throws Exception;
 
+	/**
+	 * ? true if is initialized
+	 * 
+	 * @return
+	 */
+	public boolean isInitialized();
+
 }

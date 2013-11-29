@@ -4,12 +4,11 @@
 package sk.jazzman.buildingreporter.application;
 
 import java.lang.reflect.Constructor;
-import java.util.Map;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sk.jazzman.brmi.common.ActionHandlerInf;
 import sk.jazzman.buildingreporter.server.ws.action.RegisterMeasureInstrumnet;
 
 /**
@@ -20,15 +19,14 @@ public class ServerConnectionThread extends Thread {
 
 	private static final Logger log = LoggerFactory.getLogger(ServerConnectionThread.class);
 
-	private ActionHandlerInf serverActionHandler;
-	private Map<String, Object> configuration;
+	private final MeasureInstrumentApplication appl;
 
 	/**
 	 * {@link Constructor}
 	 * 
 	 */
-	public ServerConnectionThread() {
-
+	public ServerConnectionThread(MeasureInstrumentApplication appl) {
+		this.appl = appl;
 	}
 
 	/**
@@ -40,45 +38,14 @@ public class ServerConnectionThread extends Thread {
 		return log;
 	}
 
-	/**
-	 * Setter Server Action Handler
-	 * 
-	 * @param serverActionHandler
-	 */
-	public void setServerActionHandler(ActionHandlerInf serverActionHandler) {
-		this.serverActionHandler = serverActionHandler;
-	}
-
-	/**
-	 * Setter configuration
-	 * 
-	 * @param configuration
-	 */
-	public void setConfiguration(Map<String, Object> configuration) {
-		this.configuration = configuration;
-	}
-
-	private Map<String, Object> getConfiguration() {
-		return configuration;
-	}
-
-	/**
-	 * Getter Server Action Handler
-	 * 
-	 * @return
-	 */
-	private ActionHandlerInf getServerActionHandler() {
-		return serverActionHandler;
-	}
-
 	@Override
 	public void run() {
 		super.run();
 
-		if (getServerActionHandler() != null && getConfiguration() != null) {
+		if (appl.isInitialized()) {
 
 			for (int index = 1; index < 100; index++) {
-				ping();
+				check();
 
 				try {
 					sleep(10000l);
@@ -89,6 +56,13 @@ public class ServerConnectionThread extends Thread {
 			}
 		} else {
 			getLogger().error("Not initialyzed yet.");
+
+			try {
+				sleep(10000l);
+			} catch (InterruptedException e) {
+				getLogger().debug(" sleep error", e);
+				return;
+			}
 		}
 
 	}
@@ -96,12 +70,15 @@ public class ServerConnectionThread extends Thread {
 	/**
 	 * Ping server
 	 */
-	protected void ping() {
+	protected void check() {
 		try {
 
 			getLogger().debug(" ping server ...");
-			getServerActionHandler().perform("/register", new RegisterMeasureInstrumnet.ParamBuilder().setConfiguration(getConfiguration()).build());
+			appl.getServerActionHandler().perform("/register", new RegisterMeasureInstrumnet.ParamBuilder().setConfiguration(appl.getConfiguration()).build());
 			getLogger().debug(" ping server done ...");
+
+			getLogger().debug(" try load data from db");
+			appl.getJpaActionHandler().perform("GET-mlog", new HashMap<String, Object>());
 		} catch (Exception e) {
 			getLogger().error("ping server failed", e);
 		}

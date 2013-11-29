@@ -31,9 +31,8 @@ public class Application {
 			getLogger().error("Error during init application: ", ex);
 		}
 
-		ServerConnectionThread t = new ServerConnectionThread();
-		t.setServerActionHandler(appl.getServerActionHandler());
-		t.setConfiguration(appl.getConfiguration());
+		ServerConnectionThread t = new ServerConnectionThread(appl);
+
 		t.start();
 	}
 }

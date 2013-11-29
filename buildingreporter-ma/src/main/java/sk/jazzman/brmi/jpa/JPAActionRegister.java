@@ -15,7 +15,7 @@ public class JPAActionRegister extends DefaultActionRegisterAbt<JPAActionInf> {
 
 	@Override
 	public void registerActions() throws Exception {
-		// TODO Auto-generated method stub
+		registerAction("GET-mlog", new GetMLogs());
 	}
 
 }

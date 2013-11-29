@@ -14,8 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.common.ActionHandlerInf;
+import sk.jazzman.brmi.jpa.JPAActionHandler;
+import sk.jazzman.brmi.jpa.JPAActionInf;
 import sk.jazzman.buildingreporter.arduino.ArduinoManagerInf;
 import sk.jazzman.buildingreporter.arduino.DefaultArduinoActionManager;
+import sk.jazzman.buildingreporter.server.ServerActionInf;
 import sk.jazzman.buildingreporter.server.ServerConfigurationHelper;
 import sk.jazzman.buildingreporter.server.ws.WSServerActionHandler;
 
@@ -26,10 +29,13 @@ import sk.jazzman.buildingreporter.server.ws.WSServerActionHandler;
 public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 
 	private ArduinoManagerInf arduinoManager;
-	private ActionHandlerInf serverActionHandler;
+	private ActionHandlerInf<ServerActionInf> serverActionHandler;
+	private ActionHandlerInf<JPAActionInf> jpaActionHandler;
 	private Map<String, Object> configuration;
 
 	private static final Logger logger = LoggerFactory.getLogger(MeasureInstrumentApplication.class);
+
+	private boolean isInitialized = false;
 
 	/**
 	 * {@link Constructor}
@@ -47,6 +53,11 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 		return logger;
 	}
 
+	@Override
+	public synchronized boolean isInitialized() {
+		return isInitialized;
+	}
+
 	/**
 	 * Init Application
 	 */
@@ -54,6 +65,14 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 		registerConfigurationHandler();
 		registerServerHandlers();
 		registerArduinoHandlers();
+		registerJPAActionHandlers();
+
+		isInitialized = true;
+	}
+
+	public void registerJPAActionHandlers() throws Exception {
+		jpaActionHandler = new JPAActionHandler();
+		jpaActionHandler.init(getConfiguration());
 	}
 
 	@Override
@@ -97,8 +116,17 @@ public class MeasureInstrumentApplication implements MeasureInstrumentInf {
 	 * 
 	 * @return
 	 */
-	public ActionHandlerInf getServerActionHandler() {
+	public ActionHandlerInf<ServerActionInf> getServerActionHandler() {
 		return serverActionHandler;
+	}
+
+	/**
+	 * Getter JPA Action Handler
+	 * 
+	 * @return
+	 */
+	public ActionHandlerInf<JPAActionInf> getJpaActionHandler() {
+		return jpaActionHandler;
 	}
 
 	/**
