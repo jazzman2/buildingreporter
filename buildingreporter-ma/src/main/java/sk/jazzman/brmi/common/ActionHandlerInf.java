@@ -5,6 +5,8 @@ package sk.jazzman.brmi.common;
 
 import java.util.Map;
 
+import sk.jazzman.brmi.application.SandboxInf;
+
 /**
  * Server Action Handler
  * 
@@ -21,11 +23,18 @@ public interface ActionHandlerInf<A extends ActionInf> {
 	public ActionRegisterInf<A> getActionRegister();
 
 	/**
-	 * Return configuration of action handler
+	 * Return {@link SandboxInf}
 	 * 
 	 * @return
 	 */
-	public Map<String, Object> getConfiguration();
+	public SandboxInf getSandbox();
+
+	// /**
+	// * Return configuration of action handler
+	// *
+	// * @return
+	// */
+	// public Map<String, Object> getConfiguration();
 
 	/**
 	 * Call Action
@@ -40,9 +49,9 @@ public interface ActionHandlerInf<A extends ActionInf> {
 	/**
 	 * Initialize Action Handler
 	 * 
-	 * @param configuration
+	 * @param sandbox
 	 * 
 	 * @throws Exception
 	 */
-	public void init(Map<String, Object> configuration) throws Exception;
+	public void init(SandboxInf sandbox) throws Exception;
 }

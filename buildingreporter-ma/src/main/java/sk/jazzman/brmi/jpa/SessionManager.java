@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.metamodel.MetadataSources;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class SessionManager {
 
 	private Session session;
 
-	private final boolean isActiveSession = false;
+	private boolean isActiveSession = false;
 	private boolean isInitialized = false;
 
 	/**
@@ -50,9 +50,12 @@ public class SessionManager {
 	 */
 	private synchronized void ensureInitialize() {
 		try {
-			Configuration cfg = new Configuration().configure();
-			serviceRegistry = new ServiceRegistryBuilder().applySettings(cfg.getImports()).buildServiceRegistry();
-			sessionFactory = cfg.buildSessionFactory(serviceRegistry);
+			// Configuration cfg = new Configuration().configure();
+			// serviceRegistry = new
+			// ServiceRegistryBuilder().applySettings(cfg.getImports()).buildServiceRegistry();
+			serviceRegistry = new ServiceRegistryBuilder().configure().buildServiceRegistry();
+			MetadataSources metadataSources = new MetadataSources(serviceRegistry);
+			sessionFactory = metadataSources.buildMetadata().buildSessionFactory();
 
 			isInitialized = true;
 		} catch (Throwable t) {
@@ -94,6 +97,9 @@ public class SessionManager {
 	private synchronized void ensureInitializeSession() {
 		if (isInitialized()) {
 			session = getSessionFactory().openSession();
+			isActiveSession = true;
+		} else {
+			isActiveSession = false;
 		}
 	}
 

@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
 
 /**
@@ -34,10 +35,10 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 	}
 
 	@Override
-	public void init(Map<String, Object> configuration) throws Exception {
+	public void init(SandboxInf sandbox) throws Exception {
 		getLogger().debug("Init JPAActionHandler ... ");
 
-		super.init(configuration);
+		super.init(sandbox);
 
 		actionRegister = new JPAActionRegister();
 		actionRegister.registerActions();
@@ -66,13 +67,37 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 
 		Map<String, Object> systemParams = getSystemParams();
 
+		Map<String, Object> retVal;
+
+		try {
+			retVal = perform(action, actionParams, systemParams, session);
+			getLogger().info("Action '" + actionName + "' has been performed.");
+		} catch (Exception e) {
+			retVal = null;
+			getLogger().info("Action '" + actionName + "' has not been performed. Do rollback.");
+			session.getTransaction().rollback();
+		}
+
+		return retVal;
+	}
+
+	/**
+	 * Perform Action
+	 * 
+	 * @param action
+	 * @param actionParams
+	 * @param systemParams
+	 * @param session
+	 * @return
+	 * @throws Exception
+	 */
+	private Map<String, Object> perform(JPAActionInf action, Map<String, Object> actionParams, Map<String, Object> systemParams, Session session) throws Exception {
+
 		actionParams = action.doPreAction(actionParams, systemParams, session);
 
 		actionParams = action.doAction(actionParams, systemParams, session);
 
 		actionParams = action.doPostAction(actionParams, systemParams, session);
-
-		getLogger().info("Action '" + actionName + "' has been performed.");
 
 		return actionParams;
 	}

@@ -4,7 +4,8 @@
 package sk.jazzman.brmi.common;
 
 import java.lang.reflect.Constructor;
-import java.util.Map;
+
+import sk.jazzman.brmi.application.SandboxInf;
 
 /**
  * Default Action Handler
@@ -15,7 +16,7 @@ import java.util.Map;
 public abstract class DefaultActionHandlerAbt<A extends ActionInf> implements ActionHandlerInf<A> {
 
 	protected ActionRegisterInf<A> actionRegister;
-	private Map<String, Object> configuration;
+	private SandboxInf sandbox;
 
 	/**
 	 * {@link Constructor}
@@ -31,23 +32,23 @@ public abstract class DefaultActionHandlerAbt<A extends ActionInf> implements Ac
 	}
 
 	@Override
-	public Map<String, Object> getConfiguration() {
-		return configuration;
+	public SandboxInf getSandbox() {
+		return sandbox;
 	}
 
 	/**
 	 * init action handler
 	 * 
-	 * @param configuration
+	 * @param sandbox
 	 * 
 	 */
 	@Override
-	public void init(Map<String, Object> configuration) throws Exception {
-		if (configuration == null) {
+	public void init(SandboxInf sandbox) throws Exception {
+		if (sandbox == null) {
 			throw new IllegalArgumentException("Null argument!");
 		}
 
-		this.configuration = configuration;
+		this.sandbox = sandbox;
 	}
 
 }

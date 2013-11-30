@@ -1,0 +1,211 @@
+/**
+ * 
+ */
+package sk.jazzman.brmi.application;
+
+import java.lang.reflect.Constructor;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sk.jazman.brmi.core.CoreEventManager;
+import sk.jazman.brmi.core.CoreEventManagerInf;
+import sk.jazzman.brmi.arduino.ArduinoActionHandler;
+import sk.jazzman.brmi.arduino.ArduinoActionInf;
+import sk.jazzman.brmi.common.ActionHandlerInf;
+import sk.jazzman.brmi.jpa.JPAActionHandler;
+import sk.jazzman.brmi.jpa.JPAActionInf;
+import sk.jazzman.brmi.server.ServerActionInf;
+import sk.jazzman.brmi.server.ServerConfigurationHelper;
+import sk.jazzman.brmi.server.ws.WSServerActionHandler;
+
+/**
+ * @author jkovalci
+ * 
+ */
+public class Sandbox implements SandboxInf {
+
+	private ActionHandlerInf<ArduinoActionInf> arduinoActionHandler;
+	private ActionHandlerInf<ServerActionInf> serverActionHandler;
+	private ActionHandlerInf<JPAActionInf> jpaActionHandler;
+	private Configuration configuration;
+	private XStreamManager xstreamManager;
+	private CoreEventManagerInf coreEventManager;
+
+	private static final Logger logger = LoggerFactory.getLogger(Sandbox.class);
+
+	private boolean isInitialized = false;
+
+	/**
+	 * {@link Constructor}
+	 */
+	public Sandbox() {
+
+	}
+
+	/**
+	 * Getter {@link Logger}
+	 * 
+	 * @return
+	 */
+	private Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	public synchronized boolean isInitialized() {
+		return isInitialized;
+	}
+
+	/**
+	 * Init Application
+	 */
+	@Override
+	public void init() throws Exception {
+		registerConfigurationHandler();
+		registerServerHandlers();
+		registerArduinoHandlers();
+		registerJPAActionHandlers();
+		xstreamManager = new XStreamManager();
+		coreEventManager = new CoreEventManager();
+
+		isInitialized = true;
+	}
+
+	/**
+	 * Register and init JPA
+	 * 
+	 * @throws Exception
+	 */
+	private void registerJPAActionHandlers() throws Exception {
+		jpaActionHandler = new JPAActionHandler();
+		jpaActionHandler.init(this);
+	}
+
+	/**
+	 * Register and init server
+	 * 
+	 * @throws Exception
+	 */
+	private void registerServerHandlers() throws Exception {
+		serverActionHandler = new WSServerActionHandler();
+		serverActionHandler.init(this);
+	}
+
+	/**
+	 * Register and init configuration
+	 * 
+	 * @throws Exception
+	 */
+	private void registerConfigurationHandler() throws Exception {
+		configuration = new PropertiesConfiguration("brmiconfiguration.properties");
+		configuration.setProperty(ApplicationConfigurationHelper.MI_MAC_ADDRESS, getMacAddress());
+		configuration.setProperty(ApplicationConfigurationHelper.MI_IP_ADDRESS, getIpAddress());
+
+		if (null == configuration.getString(ServerConfigurationHelper.SERVER_URL)) {
+			throw new IllegalStateException("Configuration does not exist!");
+		} else {
+			getLogger().debug("Server IP: " + configuration.getString(ServerConfigurationHelper.SERVER_URL));
+		}
+
+		getLogger().debug("Configuration: " + ApplicationConfigurationHelper.getSubconfiguration(configuration, null));
+	}
+
+	/**
+	 * register and init arduino
+	 */
+	private void registerArduinoHandlers() throws Exception {
+		// arduinoManager = new DefaultArduinoActionManager();
+		// try {
+		// ((DefaultArduinoActionManager) arduinoManager).init();
+		// } catch (Exception e) {
+		// getLogger().error("Could not to init arduino action manager", e);
+		// }
+
+		arduinoActionHandler = new ArduinoActionHandler();
+		arduinoActionHandler.init(this);
+	}
+
+	/**
+	 * Return configuration
+	 * 
+	 * @return
+	 */
+	@Override
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	/**
+	 * Getter Server Action Handler
+	 * 
+	 * @return
+	 */
+	@Override
+	public ActionHandlerInf<ServerActionInf> getServerActionHandler() {
+		return serverActionHandler;
+	}
+
+	@Override
+	public ActionHandlerInf<ArduinoActionInf> getArduinoActinHandler() {
+		return null;
+	}
+
+	@Override
+	public ActionHandlerInf<JPAActionInf> getJPAActionHandler() {
+		return jpaActionHandler;
+	}
+
+	/**
+	 * getter {@link XStreamManager}
+	 * 
+	 * @return
+	 */
+	@Override
+	public XStreamManager getXStreamManager() {
+		return xstreamManager;
+	}
+
+	@Override
+	public CoreEventManagerInf getCoreEventManager() {
+		return coreEventManager;
+	}
+
+	/**
+	 * Return mac address
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private String getMacAddress() throws Exception {
+		InetAddress ip = InetAddress.getLocalHost();
+
+		Enumeration<NetworkInterface> ifcs = NetworkInterface.getNetworkInterfaces();
+
+		byte[] mac = null;
+
+		while (ifcs.hasMoreElements()) {
+			mac = ifcs.nextElement().getHardwareAddress();
+			break;
+		}
+
+		return new String(mac != null ? mac : new byte[] {});
+	}
+
+	/**
+	 * Return ip address
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private String getIpAddress() throws Exception {
+		InetAddress ip = InetAddress.getLocalHost();
+
+		return ip.getHostAddress();
+	}
+}

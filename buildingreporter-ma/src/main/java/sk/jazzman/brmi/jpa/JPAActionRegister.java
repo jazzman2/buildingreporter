@@ -4,6 +4,7 @@
 package sk.jazzman.brmi.jpa;
 
 import sk.jazzman.brmi.common.DefaultActionRegisterAbt;
+import sk.jazzman.brmi.jpa.action.GetMLogs;
 
 /**
  * JPA Action Register
