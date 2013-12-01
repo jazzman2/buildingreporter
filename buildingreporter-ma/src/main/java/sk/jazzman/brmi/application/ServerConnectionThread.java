@@ -9,7 +9,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet;
+import sk.jazzman.brmi.common.ParameterBuilder;
 
 /**
  * @author jkovalci
@@ -83,8 +83,7 @@ public class ServerConnectionThread extends Thread {
 		try {
 
 			getLogger().debug(" ping server ...");
-			getSandbox().getServerActionHandler().perform("/register",
-					new RegisterMeasureInstrumnet.ParamBuilder().setConfiguration(ApplicationConfigurationHelper.getInstrumentConfiguration(getSandbox().getConfiguration())).build());
+			getSandbox().getServerActionHandler().perform("/register", new ParameterBuilder().setConfiguration(getSandbox().getConfiguration()).build());
 			getLogger().debug(" ping server done ...");
 
 		} catch (Exception e) {

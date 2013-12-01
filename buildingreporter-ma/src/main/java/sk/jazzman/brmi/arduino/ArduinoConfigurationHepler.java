@@ -11,12 +11,6 @@ import org.apache.commons.configuration.Configuration;
  */
 public final class ArduinoConfigurationHepler {
 
-	public static final String ARDUINO = "buildingreporter.mi.arduino";
-
-	public static final String SERIAL_PORT_NAME = "buildingreporter.mi.arduino.serialport.name";
-	public static final String TIME_OUT = "buildingreporter.mi.arduino.serialport.timeout";
-	public static final String BITRATE = "buildingreporter.mi.arduino.serialport.bitrate";
-
 	/**
 	 * private constructor
 	 */
@@ -31,7 +25,7 @@ public final class ArduinoConfigurationHepler {
 	 * @return
 	 */
 	public static final String getPort(Configuration configuration) {
-		String retVal = configuration.getString(SERIAL_PORT_NAME, null);
+		String retVal = configuration.getString("arduino/serialport/name", null);
 
 		if (retVal == null) {
 			throw new IllegalArgumentException("Null value!");
@@ -47,7 +41,7 @@ public final class ArduinoConfigurationHepler {
 	 * @return
 	 */
 	public static final Integer getPortTimeOut(Configuration configuration) {
-		Integer retVal = configuration.getInteger(TIME_OUT, null);
+		Integer retVal = configuration.getInteger("arduino/serialport/timeout", null);
 
 		if (retVal == null) {
 			throw new IllegalArgumentException("Null value!");
@@ -63,7 +57,7 @@ public final class ArduinoConfigurationHepler {
 	 * @return
 	 */
 	public static Integer getBitrate(Configuration configuration) {
-		Integer retVal = configuration.getInteger(BITRATE, null);
+		Integer retVal = configuration.getInteger("arduino/serialport/bitrate", null);
 
 		if (retVal == null) {
 			throw new IllegalArgumentException("Null value!");

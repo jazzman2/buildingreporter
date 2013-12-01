@@ -5,7 +5,6 @@ package sk.jazzman.brmi.server.ws.action;
 
 import java.lang.reflect.Constructor;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -16,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.server.ServerActionInf;
-import sk.jazzman.brmi.server.ServerConfigurationHelper;
 import sk.jazzman.brmi.server.ws.RESTServerActionInf;
 
 import com.sun.jersey.api.client.Client;
@@ -59,7 +57,7 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 
 	@Override
 	public ClientResponse performRequest(Client client, Map<String, Object> actionParams, Map<String, Object> systemParams, SandboxInf sandbox) throws Exception {
-		String servletUrl = ServerConfigurationHelper.getServerURL(systemParams);
+		String servletUrl = (String) systemParams.get("server_url");
 
 		URI uri = UriBuilder.fromUri(servletUrl + getName() + "/register").build();
 
@@ -73,32 +71,7 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 	}
 
 	public static class ParamBuilder {
-		private final Map<String, Object> actionParams = new HashMap<String, Object>();
 
-		/**
-		 * Set Configuration
-		 * 
-		 * @param configuration
-		 * @return
-		 */
-		public ParamBuilder setConfiguration(Map<String, Object> configuration) {
-			if (configuration == null) {
-				throw new IllegalArgumentException("Null argument!");
-			}
-
-			actionParams.put(ParamGetter.INPUT_CONFIGURATION, configuration);
-
-			return this;
-		}
-
-		/**
-		 * Build params
-		 * 
-		 * @return
-		 */
-		public Map<String, Object> build() {
-			return actionParams;
-		}
 	}
 
 	public static class ParamGetter {
@@ -116,8 +89,8 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 			this.actionParams = actionParams;
 		}
 
-		public Map<String, Object> getConfiguration() {
-			Map<String, Object> retVal = (Map<String, Object>) actionParams.get(INPUT_CONFIGURATION);
+		public String getConfiguration() {
+			String retVal = (String) actionParams.get(INPUT_CONFIGURATION);
 
 			return retVal;
 		}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<br-root>
+	<!-- Measure instrument -->
+	<mi>
+		<name>undefined</name>
+		<mac_address></mac_address>
+		<ip_address></ip_address>
+	</mi>
+	
+	<!-- Server -->
+	<server>
+		<url>http://localhost:8080/buildingreporter-web/mi</url>		
+	</server>
+	
+	<!-- Arduino -->
+	<arduino>
+		<serialport>
+			<name>/dev/ttyUSB0</name>
+			<timeout>2000</timeout>
+			<bitrate>9600</bitrate>
+		</serialport>	
+	</arduino>
+</br-root>
+

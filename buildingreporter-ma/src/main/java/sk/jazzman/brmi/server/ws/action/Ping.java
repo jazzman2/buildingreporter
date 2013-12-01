@@ -10,7 +10,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.server.ServerActionInf;
-import sk.jazzman.brmi.server.ServerConfigurationHelper;
 import sk.jazzman.brmi.server.ws.RESTServerActionInf;
 import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet.ParamGetter;
 
@@ -30,7 +29,7 @@ public class Ping implements ServerActionInf, RESTServerActionInf {
 
 	@Override
 	public ClientResponse performRequest(Client client, Map<String, Object> actionParams, Map<String, Object> systemParams, SandboxInf sandbox) throws Exception {
-		String servletUrl = ServerConfigurationHelper.getServerURL(systemParams);
+		String servletUrl = (String) systemParams.get("server_url");
 
 		WebResource resource = client.resource(UriBuilder.fromUri(servletUrl).fragment(getName()).build());
 

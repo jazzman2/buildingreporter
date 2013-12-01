@@ -95,9 +95,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	protected Map<String, Object> createSystemParams() {
 		Map<String, Object> retVal = new HashMap<String, Object>();
 
-		Map<String, Object> serverConfig = ServerConfigurationHelper.getServerConfiguration(getSandbox().getConfiguration());
-
-		retVal.put(ServerConfigurationHelper.SERVER_URL, ServerConfigurationHelper.getServerURL(serverConfig));
+		retVal.put("server_url", ServerConfigurationHelper.getServerURL(getSandbox().getConfiguration()));
 
 		return retVal;
 	}

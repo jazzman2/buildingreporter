@@ -24,4 +24,11 @@ public interface CoreEventInf {
 	 * @return
 	 */
 	public Object getParameters();
+
+	/**
+	 * Return source of event
+	 * 
+	 * @return
+	 */
+	public Object getSource();
 }

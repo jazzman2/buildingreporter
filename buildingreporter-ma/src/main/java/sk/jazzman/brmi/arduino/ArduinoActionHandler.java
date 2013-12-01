@@ -19,14 +19,17 @@ import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazman.brmi.core.CoreEvent;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
+import sk.jazzman.brmi.common.ParameterBuilder;
 
 /**
  * Arduino Action Handler Abstract
  * 
  * @author jkovalci
  * 
+ * @see https://sites.google.com/site/projectrobogobydownloads/
  */
 public class ArduinoActionHandler extends DefaultActionHandlerAbt<ArduinoActionInf> {
 
@@ -92,6 +95,8 @@ public class ArduinoActionHandler extends DefaultActionHandlerAbt<ArduinoActionI
 						String inputLine = input.readLine();
 
 						getLogger().debug("Read from serial port  value " + inputLine);
+
+						getSandbox().getCoreEventManager().fireEvent(new CoreEvent("ArduinoReadSerial", new ParameterBuilder().setParameter("value", inputLine), ArduinoActionHandler.class));
 
 					} catch (Exception e) {
 						getLogger().error("Could not read data!");

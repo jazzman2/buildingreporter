@@ -9,7 +9,8 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public class Sandbox implements SandboxInf {
 	private ActionHandlerInf<ArduinoActionInf> arduinoActionHandler;
 	private ActionHandlerInf<ServerActionInf> serverActionHandler;
 	private ActionHandlerInf<JPAActionInf> jpaActionHandler;
-	private Configuration configuration;
+	private XMLConfiguration configuration;
 	private XStreamManager xstreamManager;
 	private CoreEventManagerInf coreEventManager;
 
@@ -103,14 +104,26 @@ public class Sandbox implements SandboxInf {
 	 * @throws Exception
 	 */
 	private void registerConfigurationHandler() throws Exception {
-		configuration = new PropertiesConfiguration("brmiconfiguration.properties");
-		configuration.setProperty(ApplicationConfigurationHelper.MI_MAC_ADDRESS, getMacAddress());
-		configuration.setProperty(ApplicationConfigurationHelper.MI_IP_ADDRESS, getIpAddress());
 
-		if (null == configuration.getString(ServerConfigurationHelper.SERVER_URL)) {
+		configuration = new XMLConfiguration("brmiconfiguration.xml");
+		configuration.setExpressionEngine(new XPathExpressionEngine());
+
+		ApplicationConfigurationHelper.setMacAddress(getMacAddress(), configuration);
+		ApplicationConfigurationHelper.setIpAddress(getIpAddress(), configuration);
+
+		// configuration = new
+		// PropertiesConfiguration("brmiconfiguration.properties");
+		// configuration.setProperty(ApplicationConfigurationHelper.MI_MAC_ADDRESS,
+		// );
+		// configuration.setProperty(ApplicationConfigurationHelper.MI_IP_ADDRESS,
+		// getIpAddress());
+
+		String url = ServerConfigurationHelper.getServerURL(configuration);
+
+		if (null == url) {
 			throw new IllegalStateException("Configuration does not exist!");
 		} else {
-			getLogger().debug("Server IP: " + configuration.getString(ServerConfigurationHelper.SERVER_URL));
+			getLogger().debug("Server IP: " + url);
 		}
 
 		getLogger().debug("Configuration: " + ApplicationConfigurationHelper.getSubconfiguration(configuration, null));
@@ -120,15 +133,13 @@ public class Sandbox implements SandboxInf {
 	 * register and init arduino
 	 */
 	private void registerArduinoHandlers() throws Exception {
-		// arduinoManager = new DefaultArduinoActionManager();
-		// try {
-		// ((DefaultArduinoActionManager) arduinoManager).init();
-		// } catch (Exception e) {
-		// getLogger().error("Could not to init arduino action manager", e);
-		// }
-
 		arduinoActionHandler = new ArduinoActionHandler();
-		arduinoActionHandler.init(this);
+
+		try {
+			arduinoActionHandler.init(this);
+		} catch (Exception e) {
+			getLogger().error("Could not to init arduino handler!");
+		}
 	}
 
 	/**

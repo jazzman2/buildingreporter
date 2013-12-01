@@ -3,19 +3,13 @@
  */
 package sk.jazzman.brmi.server;
 
-import java.util.Map;
-
 import org.apache.commons.configuration.Configuration;
-
-import sk.jazzman.brmi.application.ApplicationConfigurationHelper;
 
 /**
  * @author jano
  * 
  */
 public final class ServerConfigurationHelper {
-	public static final String SERVER = "buildingreporter.mi.server";
-	public static final String SERVER_URL = "buildingreporter.mi.server.url";
 
 	/**
 	 * Get Server url from configuration
@@ -23,27 +17,17 @@ public final class ServerConfigurationHelper {
 	 * @param configuration
 	 * @return
 	 */
-	public static String getServerURL(Map<String, Object> configuration) {
+	public static final String getServerURL(Configuration configuration) {
 		if (configuration == null) {
 			throw new IllegalArgumentException("Null argument!");
 		}
 
-		String retVal = (String) configuration.get(SERVER_URL);
+		String retVal = configuration.getString("server/url", null);
 
 		if (retVal == null) {
 			throw new IllegalStateException("Null value!");
 		}
 
 		return retVal;
-	}
-
-	/**
-	 * Return server subconfiguration
-	 * 
-	 * @param configuration
-	 * @return
-	 */
-	public static Map<String, Object> getServerConfiguration(Configuration configuration) {
-		return ApplicationConfigurationHelper.getSubconfiguration(configuration, SERVER);
 	}
 }
