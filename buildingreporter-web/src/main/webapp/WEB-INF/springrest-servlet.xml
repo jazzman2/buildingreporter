@@ -22,7 +22,7 @@
 
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-	<context:component-scan base-package="sk.jazzman.buildingreporter.application" />
+	<context:component-scan base-package="sk.jazzman.buildingreporter.service" />
 
 	<mvc:annotation-driven />
 

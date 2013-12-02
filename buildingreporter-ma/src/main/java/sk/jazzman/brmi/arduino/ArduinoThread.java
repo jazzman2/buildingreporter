@@ -9,9 +9,11 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazman.brmi.core.CoreConfigurationHelper;
+import sk.jazman.brmi.core.CoreEvent;
 import sk.jazzman.brmi.application.SandboxInf;
+import sk.jazzman.brmi.common.ParameterBuilder;
 import sk.jazzman.brmi.domain.measurement.MLog;
-import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
 
 /**
  * @author jano
@@ -59,7 +61,11 @@ public class ArduinoThread extends Thread {
 
 		while (true) {
 			if (getSandbox().isInitialized()) {
-				createMLog();
+				try {
+					createMLog();
+				} catch (Exception e) {
+					getLogger().error("Error fire event!", e);
+				}
 			}
 
 			try {
@@ -71,10 +77,13 @@ public class ArduinoThread extends Thread {
 		}
 	}
 
-	private void createMLog() {
-		MLogInf log = new MLog();
+	private void createMLog() throws Exception {
+		MLog log = new MLog();
 		log.setLogDate(new java.sql.Time(System.currentTimeMillis()));
 		log.setValueMeasured(Long.valueOf((new Random().nextLong() * 20l) - 10l));
-		log.set
+		log.setUnitMeasured("celsius");
+
+		getSandbox().getCoreEventManager().fireEvent(
+				new CoreEvent(CoreConfigurationHelper.EVENT_ARDUINO_TEMTERATURE_READ, new ParameterBuilder().setParameter("value", log).build(), ArduinoThread.this));
 	}
 }

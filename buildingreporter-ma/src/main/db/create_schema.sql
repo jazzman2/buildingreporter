@@ -1,0 +1,11 @@
+BEGIN;
+
+CREATE DATABASE brmi WITH OWNER br;
+
+\c brmi
+
+CREATE TABLE mlog{
+
+}
+
+COMMIT;

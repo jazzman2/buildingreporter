@@ -23,6 +23,7 @@ import sk.jazzman.brmi.common.ParameterBuilder;
 import sk.jazzman.brmi.domain.measurement.MLog;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
+import sk.jazzman.brmi.server.ws.action.PutMLog;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -86,13 +87,15 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 		client = Client.create(config);
 
-		initCoreEventHandler();
+		initCoreEventHandler(sandbox);
 	}
 
 	/**
 	 * Init core event handler
+	 * 
+	 * @param sandbox
 	 */
-	private void initCoreEventHandler() {
+	private void initCoreEventHandler(SandboxInf sandbox) {
 		coreEventHandler = new CoreEventHandlerAbt() {
 			@Override
 			public void registerResolvers() {
@@ -121,7 +124,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 					public void resolve(CoreEventInf event) throws Exception {
 						Map<String, Object> params = (Map<String, Object>) event.getParameters();
 
-						Object value = params.get("value");
+						Object value = params.get("mlog");
 
 						if (value instanceof MLog) {
 							MLog log = (MLog) value;
@@ -129,9 +132,9 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 							// FIXME: set id
 							// log.setId(id);
 							try {
-								perform("/log", new ParameterBuilder().setParameter("mlog", value).build());
+								perform(PutMLog.getName(), new ParameterBuilder().setParameter("mlog", value).build());
 							} catch (Exception ex) {
-								getLogger().error("Could not to sent to server!");
+								getLogger().error("Could not to sent to server!", ex);
 							}
 						} else {
 							throw new UnsupportedDataTypeException("Not supported data type!");
@@ -140,6 +143,8 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 				});
 			}
 		};
+
+		sandbox.getCoreEventManager().register("ServerCoreEventHandler", coreEventHandler);
 	}
 
 	@Override

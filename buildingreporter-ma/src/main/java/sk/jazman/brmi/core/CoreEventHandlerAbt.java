@@ -3,6 +3,7 @@
  */
 package sk.jazman.brmi.core;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,13 @@ import java.util.Map;
 public abstract class CoreEventHandlerAbt implements CoreEventHandlerInf {
 
 	private final Map<String, CoreEventResolverInf> register = new HashMap<String, CoreEventResolverInf>();
+
+	/**
+	 * {@link Constructor}
+	 */
+	public CoreEventHandlerAbt() {
+		registerResolvers();
+	}
 
 	@Override
 	public void handle(CoreEventInf event) throws Exception {

@@ -6,6 +6,8 @@ package sk.jazzman.brmi.application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazzman.brmi.arduino.ArduinoThread;
+
 /**
  * @author jano
  * 
@@ -23,16 +25,18 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-		Sandbox appl = new Sandbox();
+		Sandbox sandbox = new Sandbox();
 
 		try {
-			appl.init();
+			sandbox.init();
 		} catch (Exception ex) {
 			getLogger().error("Error during init application: ", ex);
 		}
 
-		ServerConnectionThread t = new ServerConnectionThread(appl);
-
+		ServerConnectionThread t = new ServerConnectionThread(sandbox);
 		t.start();
+
+		ArduinoThread at = new ArduinoThread(sandbox);
+		at.start();
 	}
 }

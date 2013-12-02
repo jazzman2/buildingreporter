@@ -57,7 +57,7 @@ public class ServerConnectionThread extends Thread {
 				check();
 
 				try {
-					sleep(10000l);
+					sleep(100000l);
 				} catch (InterruptedException e) {
 					getLogger().debug(" sleep error", e);
 					return;
@@ -67,7 +67,7 @@ public class ServerConnectionThread extends Thread {
 			getLogger().error("Not initialyzed yet.");
 
 			try {
-				sleep(10000l);
+				sleep(100000l);
 			} catch (InterruptedException e) {
 				getLogger().debug(" sleep error", e);
 				return;

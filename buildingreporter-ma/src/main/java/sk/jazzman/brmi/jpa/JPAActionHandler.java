@@ -54,15 +54,17 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 
 		sessionManager = new SessionManager();
 
-		initCoreEventHandler();
+		initCoreEventHandler(sandbox);
 
 		getLogger().debug("Init JPAActionHandler ... Done ");
 	}
 
 	/**
 	 * Init core event handler
+	 * 
+	 * @param sandbox
 	 */
-	private void initCoreEventHandler() {
+	private void initCoreEventHandler(SandboxInf sandbox) {
 		coreEventHandler = new CoreEventHandlerAbt() {
 			@Override
 			public void registerResolvers() {
@@ -79,15 +81,17 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 								getSandbox().getCoreEventManager().fireEvent(
 										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT, new ParameterBuilder().setParameter("mlog", mlog), JPAActionHandler.class));
 							} catch (Exception ex) {
-								getLogger().error("MLog - put unsucessful");
+								getLogger().error("MLog - put unsucessful", ex);
 								getSandbox().getCoreEventManager().fireEvent(
-										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new ParameterBuilder().setParameter("mlog", value), JPAActionHandler.class));
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new ParameterBuilder().setParameter("mlog", value).build(), JPAActionHandler.class));
 							}
 						}
 					}
 				});
 			}
 		};
+
+		sandbox.getCoreEventManager().register("JPACoreEventHandler", coreEventHandler);
 	}
 
 	/**
@@ -116,7 +120,7 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 			getLogger().info("Action '" + actionName + "' has been performed.");
 		} catch (Exception e) {
 			retVal = null;
-			getLogger().info("Action '" + actionName + "' has not been performed. Do rollback.");
+			getLogger().info("Action '" + actionName + "' has not been performed. Do rollback.", e);
 			session.getTransaction().rollback();
 		}
 
