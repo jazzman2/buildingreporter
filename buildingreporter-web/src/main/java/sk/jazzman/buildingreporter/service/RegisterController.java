@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.application;
+package sk.jazzman.buildingreporter.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

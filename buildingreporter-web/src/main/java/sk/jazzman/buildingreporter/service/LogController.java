@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.buildingreporter.application;
+package sk.jazzman.buildingreporter.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class LogController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LogController.class);
 
-	@RequestMapping(value = "/mlog", method = RequestMethod.PUT)
+	@RequestMapping(value = "/put", method = RequestMethod.PUT)
 	public @ResponseBody
 	String getRegister(@RequestBody String mlog) {
 
