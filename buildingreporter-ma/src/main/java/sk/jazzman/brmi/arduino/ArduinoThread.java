@@ -74,7 +74,7 @@ public class ArduinoThread extends Thread {
 	private void createMLog() {
 		MLogInf log = new MLog();
 		log.setLogDate(new java.sql.Time(System.currentTimeMillis()));
-
 		log.setValueMeasured(Long.valueOf((new Random().nextLong() * 20l) - 10l));
+		log.set
 	}
 }
