@@ -15,15 +15,35 @@ public class CoreEventManager implements CoreEventManagerInf {
 	private final Map<String, CoreEventHandlerInf> register = new HashMap<String, CoreEventHandlerInf>();
 
 	@Override
-	public void fireEvent(CoreEventInf coreEvent) {
+	public void fireEvent(CoreEventInf coreEvent) throws Exception {
+		if (coreEvent == null) {
+			throw new IllegalArgumentException("Null argument!");
+		}
 
-	}
-
-	@Override
-	public void registerHandler(String name, CoreEventHandlerInf handler) {
-		if (register.containsKey(name)) {
-			throw new IllegalArgumentException("Null value!");
+		for (CoreEventHandlerInf h : register.values()) {
+			h.handle(coreEvent);
 		}
 	}
 
+	@Override
+	public void register(String name, CoreEventHandlerInf handler) {
+		if (name == null || handler == null) {
+			throw new IllegalArgumentException("Null argument!");
+		}
+
+		if (register.containsKey(name)) {
+			throw new IllegalStateException("Core Event Handler " + name + " already registered!");
+		}
+
+		register.put(name, handler);
+	}
+
+	@Override
+	public void unregister(String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("Null argument!");
+		}
+
+		register.remove(name);
+	}
 }

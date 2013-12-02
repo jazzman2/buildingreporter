@@ -12,8 +12,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet.ParamGetter;
-
 /**
  * Parameter Builder
  * 
@@ -62,7 +60,7 @@ public class ParameterBuilder {
 			throw new IllegalStateException("Coult not to save configuration!");
 		}
 
-		parameters.put(ParamGetter.INPUT_CONFIGURATION, sw.toString());
+		parameters.put(ParameterGetter.INPUT_CONFIGURATION, sw.toString());
 
 		return this;
 	}

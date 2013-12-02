@@ -11,24 +11,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import sk.jazzman.buildingreporter.domain.measurement.MLog;
+
 /**
- * Register Measure Instrument Controller
+ * {@link MLog} controller
  * 
- * @author jano
+ * @author jkovalci
  * 
  */
 @Controller
-@RequestMapping("/register")
-public class RegisterController {
+@RequestMapping("/mlog")
+public class LogController {
 
-	private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogController.class);
 
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@RequestMapping(value = "/mlog", method = RequestMethod.PUT)
 	public @ResponseBody
-	String getRegister(@RequestBody String configuration) {
+	String getRegister(@RequestBody String mlog) {
 
-		if (configuration != null) {
-			logger.debug("Name " + configuration);
+		if (mlog != null) {
+			logger.debug("Name " + mlog);
 		} else {
 			logger.error("Null object!");
 		}

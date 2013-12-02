@@ -13,13 +13,22 @@ public interface CoreEventManagerInf {
 	 * Fire {@link CoreEventInf}
 	 * 
 	 * @param coreEvent
+	 * 
+	 * @throws Exception
 	 */
-	public void fireEvent(CoreEventInf coreEvent);
+	public void fireEvent(CoreEventInf coreEvent) throws Exception;
 
 	/**
 	 * Register {@link CoreEventHandlerInf}
 	 * 
 	 * @param name
 	 */
-	public void registerHandler(String name, CoreEventHandlerInf handler);
+	public void register(String name, CoreEventHandlerInf handler);
+
+	/**
+	 * Unregister {@link CoreEventHandlerInf}
+	 * 
+	 * @param name
+	 */
+	public void unregister(String name);
 }

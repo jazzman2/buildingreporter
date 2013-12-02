@@ -9,7 +9,7 @@ import java.util.Map;
  * @author jano
  * 
  */
-public class ActionParamGetter {
+public final class ActionParamGetter {
 
 	/**
 	 * Return action param
@@ -19,7 +19,7 @@ public class ActionParamGetter {
 	 * @param actionParams
 	 * @return
 	 */
-	public <T extends Class<T>> T get(String key, T clazz, Map<String, Object> actionParams) {
+	public static final <T> T get(String key, Class<T> clazz, Map<String, Object> actionParams) {
 		if (key == null || clazz == null || actionParams == null) {
 			throw new IllegalArgumentException("Null argument");
 		}

@@ -9,9 +9,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import sk.jazzman.brmi.application.SandboxInf;
+import sk.jazzman.brmi.common.ParameterGetter;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ws.RESTServerActionInf;
-import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet.ParamGetter;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -33,7 +33,7 @@ public class Ping implements ServerActionInf, RESTServerActionInf {
 
 		WebResource resource = client.resource(UriBuilder.fromUri(servletUrl).fragment(getName()).build());
 
-		String object = sandbox.getXStreamManager().toXML(new ParamGetter(actionParams).getConfiguration());
+		String object = sandbox.getXStreamManager().toXML(new ParameterGetter().getConfiguration(actionParams));
 
 		return resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, object);
 	}

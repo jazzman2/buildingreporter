@@ -6,6 +6,8 @@ package sk.jazzman.brmi.application;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
+import sk.jazzman.brmi.domain.measurement.MLog;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -22,6 +24,7 @@ public class XStreamManager {
 	public XStreamManager() {
 		xstream = new XStream(new DomDriver());
 		xstream.alias("map", Map.class);
+		xstream.processAnnotations(MLog.class);
 	}
 
 	/**

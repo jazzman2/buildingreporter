@@ -7,11 +7,20 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.activation.UnsupportedDataTypeException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazman.brmi.core.CoreConfigurationHelper;
+import sk.jazman.brmi.core.CoreEventHandlerAbt;
+import sk.jazman.brmi.core.CoreEventHandlerInf;
+import sk.jazman.brmi.core.CoreEventInf;
+import sk.jazman.brmi.core.CoreEventResolverInf;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
+import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.brmi.domain.measurement.MLog;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
 
@@ -29,6 +38,8 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionInf> {
 
 	private static final Logger logger = LoggerFactory.getLogger(WSServerActionHandler.class);
+
+	private CoreEventHandlerInf coreEventHandler;
 	private Client client;
 
 	/**
@@ -74,6 +85,61 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 		ClientConfig config = new DefaultClientConfig();
 
 		client = Client.create(config);
+
+		initCoreEventHandler();
+	}
+
+	/**
+	 * Init core event handler
+	 */
+	private void initCoreEventHandler() {
+		coreEventHandler = new CoreEventHandlerAbt() {
+			@Override
+			public void registerResolvers() {
+				register(CoreConfigurationHelper.EVENT_MLOG_PUT, new CoreEventResolverInf() {
+					@Override
+					public void resolve(CoreEventInf event) throws Exception {
+						Map<String, Object> params = (Map<String, Object>) event.getParameters();
+
+						Object value = params.get("value");
+
+						if (value instanceof MLog) {
+							try {
+								perform("/log", new ParameterBuilder().setParameter("mlog", value).build());
+							} catch (Exception ex) {
+								getLogger().error("Could not to sent to server!");
+								// FIXME:
+							}
+						} else {
+							throw new UnsupportedDataTypeException("Not supported data type!");
+						}
+					}
+				});
+
+				register(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new CoreEventResolverInf() {
+					@Override
+					public void resolve(CoreEventInf event) throws Exception {
+						Map<String, Object> params = (Map<String, Object>) event.getParameters();
+
+						Object value = params.get("value");
+
+						if (value instanceof MLog) {
+							MLog log = (MLog) value;
+
+							// FIXME: set id
+							// log.setId(id);
+							try {
+								perform("/log", new ParameterBuilder().setParameter("mlog", value).build());
+							} catch (Exception ex) {
+								getLogger().error("Could not to sent to server!");
+							}
+						} else {
+							throw new UnsupportedDataTypeException("Not supported data type!");
+						}
+					}
+				});
+			}
+		};
 	}
 
 	@Override

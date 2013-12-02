@@ -68,12 +68,13 @@ public class Sandbox implements SandboxInf {
 	 */
 	@Override
 	public void init() throws Exception {
+
+		coreEventManager = new CoreEventManager();
 		registerConfigurationHandler();
 		registerServerHandlers();
 		registerArduinoHandlers();
 		registerJPAActionHandlers();
 		xstreamManager = new XStreamManager();
-		coreEventManager = new CoreEventManager();
 
 		isInitialized = true;
 	}

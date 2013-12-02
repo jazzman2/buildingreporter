@@ -15,6 +15,8 @@ import org.hibernate.validator.constraints.Length;
 
 import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 /**
  * Measured Log
  * 
@@ -24,20 +26,27 @@ import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
 @Entity
 @Table(name = "mlog")
 @SequenceGenerator(name = "SEQ", sequenceName = "log_seq")
+@XStreamAlias("mlog")
 public class MLog extends MAEntity implements MLogInf {
 	/** serial id */
 	private static final long serialVersionUID = 1L;
 
+	@XStreamAlias("valueMeasured")
 	private Long valueMeasured;
 
+	@XStreamAlias("valueTransformed")
 	private Long valueTransformed;
 
+	@XStreamAlias("logDate")
 	private java.util.Date logDate;
 
+	@XStreamAlias("instrumentName")
 	private String instrumentName;
 
+	@XStreamAlias("unitMeasured")
 	private String unitMeasured;
 
+	@XStreamAlias("unitTransformed")
 	private String unitTransformed;
 
 	@Column(name = "value_measured")

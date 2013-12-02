@@ -10,8 +10,16 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.jazman.brmi.core.CoreConfigurationHelper;
+import sk.jazman.brmi.core.CoreEvent;
+import sk.jazman.brmi.core.CoreEventHandlerAbt;
+import sk.jazman.brmi.core.CoreEventHandlerInf;
+import sk.jazman.brmi.core.CoreEventInf;
+import sk.jazman.brmi.core.CoreEventResolverInf;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
+import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.brmi.domain.measurement.MLog;
 
 /**
  * JPA Action Handler
@@ -24,6 +32,7 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 	private static final Logger logger = LoggerFactory.getLogger(JPAActionHandler.class);
 
 	private SessionManager sessionManager;
+	private CoreEventHandlerInf coreEventHandler;
 
 	/**
 	 * Getter {@link Logger}
@@ -45,7 +54,40 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 
 		sessionManager = new SessionManager();
 
+		initCoreEventHandler();
+
 		getLogger().debug("Init JPAActionHandler ... Done ");
+	}
+
+	/**
+	 * Init core event handler
+	 */
+	private void initCoreEventHandler() {
+		coreEventHandler = new CoreEventHandlerAbt() {
+			@Override
+			public void registerResolvers() {
+				register(CoreConfigurationHelper.EVENT_ARDUINO_TEMTERATURE_READ, new CoreEventResolverInf() {
+					@Override
+					public void resolve(CoreEventInf event) throws Exception {
+						Map<String, Object> params = (Map<String, Object>) event.getParameters();
+
+						Object value = params.get("value");
+
+						if (value instanceof MLog) {
+							try {
+								MLog mlog = (MLog) perform("PUT-mlog", new ParameterBuilder().setParameter("mlog", value).build()).get("mlog");
+								getSandbox().getCoreEventManager().fireEvent(
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT, new ParameterBuilder().setParameter("mlog", mlog), JPAActionHandler.class));
+							} catch (Exception ex) {
+								getLogger().error("MLog - put unsucessful");
+								getSandbox().getCoreEventManager().fireEvent(
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new ParameterBuilder().setParameter("mlog", value), JPAActionHandler.class));
+							}
+						}
+					}
+				});
+			}
+		};
 	}
 
 	/**

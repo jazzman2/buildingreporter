@@ -3,7 +3,6 @@
  */
 package sk.jazzman.brmi.server.ws.action;
 
-import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.application.SandboxInf;
+import sk.jazzman.brmi.common.ParameterGetter;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ws.RESTServerActionInf;
 
@@ -65,34 +65,9 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 
 		getLogger().debug("Call request to: " + uri.getPath());
 
-		String object = sandbox.getXStreamManager().toXML(new ParamGetter(actionParams).getConfiguration());
+		String object = sandbox.getXStreamManager().toXML(new ParameterGetter().getConfiguration(actionParams));
 
 		return resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, object);
 	}
 
-	public static class ParamBuilder {
-
-	}
-
-	public static class ParamGetter {
-
-		public static final String INPUT_CONFIGURATION = "p_input_configuration";
-
-		private final Map<String, Object> actionParams;
-
-		/**
-		 * {@link Constructor}
-		 * 
-		 * @param actionParams
-		 */
-		public ParamGetter(Map<String, Object> actionParams) {
-			this.actionParams = actionParams;
-		}
-
-		public String getConfiguration() {
-			String retVal = (String) actionParams.get(INPUT_CONFIGURATION);
-
-			return retVal;
-		}
-	}
 }
