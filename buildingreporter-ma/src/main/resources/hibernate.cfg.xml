@@ -3,7 +3,8 @@
 "-//Hibernate/Hibernate Configuration DTD 4.0//EN"
 "http://hibernate.sourceforge.net/hibernate-configuration-4.0.dtd">
 
-<hibernate-configuration xmlns="http://www.hibernate.org/xsd/hibernate-configuration">
+<hibernate-configuration
+	xmlns="http://www.hibernate.org/xsd/hibernate-configuration">
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
@@ -11,10 +12,19 @@
 		<property name="hibernate.connection.password">jahoda</property>
 		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/brmi</property>
 
+		<property name="hibernate.current_session_context_class">thread</property>
 		<property name="hibernate.connection_pool_size">1</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.show_sql">true</property>
+
+		<property name="hibernate.c3p0.acquire_increment">1</property>
+		<property name="hibernate.c3p0.idle_test_period">100</property>
+		<property name="hibernate.c3p0.max_size">10</property>
+		<property name="hibernate.c3p0.max_statements">10</property>
+		<property name="hibernate.c3p0.min_size">10</property>
+		<property name="hibernate.c3p0.timeout">100</property>
+
 		<mapping class="sk.jazzman.brmi.domain.measurement.MLog" />
-		<mapping class="sk.jazzman.brmi.domain.measurement.MAEntity"/>
+		<mapping class="sk.jazzman.brmi.domain.measurement.MAEntity" />
 	</session-factory>
 </hibernate-configuration>

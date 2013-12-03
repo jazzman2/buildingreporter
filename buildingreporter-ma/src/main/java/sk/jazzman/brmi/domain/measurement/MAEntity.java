@@ -19,12 +19,13 @@ import sk.jazzman.buildingreporter.domain.BREntityInf;
 public class MAEntity implements BREntityInf {
 	/** serial id */
 	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ")
+
 	private Long id;
 
 	@Column(name = "id")
 	@Override
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ")
 	public Long getId() {
 		return id;
 	}
