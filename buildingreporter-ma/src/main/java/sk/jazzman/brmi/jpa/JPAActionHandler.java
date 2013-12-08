@@ -19,7 +19,7 @@ import sk.jazman.brmi.core.CoreEventResolverInf;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
 import sk.jazzman.brmi.common.ParameterBuilder;
-import sk.jazzman.brmi.domain.measurement.MLog;
+import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 
 /**
  * JPA Action Handler
@@ -75,16 +75,18 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 
 						Object value = params.get("value");
 
-						if (value instanceof MLog) {
+						if (value instanceof MLogArduinoInf) {
 							try {
-								MLog mlog = (MLog) perform("PUT-mlog", new ParameterBuilder().setParameter("mlog", value).build()).get("mlog");
+								MLogArduinoInf mlog = (MLogArduinoInf) perform("PUT-mlog", new ParameterBuilder().setParameter("mlog", value).build()).get("mlog");
 								getSandbox().getCoreEventManager().fireEvent(
-										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT, new ParameterBuilder().setParameter("mlog", mlog), JPAActionHandler.class));
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT, new ParameterBuilder().setParameter("mlog", mlog).build(), JPAActionHandler.class));
 							} catch (Exception ex) {
 								getLogger().error("MLog - put unsucessful", ex);
 								getSandbox().getCoreEventManager().fireEvent(
 										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new ParameterBuilder().setParameter("mlog", value).build(), JPAActionHandler.class));
 							}
+						} else {
+							throw new IllegalStateException("Wrong object!");
 						}
 					}
 				});
@@ -107,23 +109,27 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 	public Map<String, Object> perform(String actionName, Map<String, Object> actionParams) throws Exception {
 		getLogger().info("Perform action '" + actionName + "'.");
 
-		JPAActionInf action = getActionRegister().getAction(actionName);
-
-		Session session = getSessionManager().getSession();
-
-		Map<String, Object> systemParams = getSystemParams();
-
 		Map<String, Object> retVal;
 
-		try {
-			retVal = perform(action, actionParams, systemParams, session);
-			getLogger().info("Action '" + actionName + "' has been performed.");
-		} catch (Exception e) {
+		if (!getSessionManager().isInitialized()) {
+			getLogger().error("Session mamager not initialized yet!");
 			retVal = null;
-			getLogger().info("Action '" + actionName + "' has not been performed. Do rollback.", e);
-			session.getTransaction().rollback();
-		}
+		} else {
+			JPAActionInf action = getActionRegister().getAction(actionName);
 
+			Session session = getSessionManager().getSession();
+
+			Map<String, Object> systemParams = getSystemParams();
+
+			try {
+				retVal = perform(action, actionParams, systemParams, session);
+				getLogger().info("Action '" + actionName + "' has been performed.");
+			} catch (Exception e) {
+				retVal = null;
+				getLogger().info("Action '" + actionName + "' has not been performed. Do rollback.", e);
+				session.getTransaction().rollback();
+			}
+		}
 		return retVal;
 	}
 

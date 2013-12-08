@@ -8,7 +8,8 @@ import java.util.Map;
 import org.hibernate.Session;
 
 import sk.jazzman.brmi.common.ActionParamGetter;
-import sk.jazzman.brmi.domain.measurement.MLog;
+import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 
 /**
  * @author jkovalci
@@ -20,12 +21,12 @@ public class PutMLog extends DefaultJPAActionAbt {
 
 		session.beginTransaction();
 
-		MLog mlog = ActionParamGetter.get("mlog", MLog.class, actionParams);
+		MLogArduinoInf mlog = ActionParamGetter.get("mlog", MLogArduinoInf.class, actionParams);
 
 		session.save(mlog);
 
 		session.getTransaction().commit();
 
-		return null;
+		return new ParameterBuilder().setParameter("mlog", mlog).build();
 	}
 }

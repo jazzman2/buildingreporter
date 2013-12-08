@@ -24,7 +24,9 @@
 		<property name="hibernate.c3p0.min_size">10</property>
 		<property name="hibernate.c3p0.timeout">100</property>
 
-		<mapping class="sk.jazzman.brmi.domain.measurement.MLog" />
-		<mapping class="sk.jazzman.brmi.domain.measurement.MAEntity" />
+		<mapping class="sk.jazzman.brmi.domain.measurement.MLog2" />
+<!-- 		<mapping class="sk.jazzman.brmi.domain.measurement.MAEntity" /> -->
+
+<!-- 		<mapping resource="sk.jazzman.brmi.domain.measurement.MLog.hbm.xml" /> -->
 	</session-factory>
 </hibernate-configuration>

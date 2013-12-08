@@ -14,6 +14,7 @@ import sk.jazman.brmi.core.CoreEvent;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.ParameterBuilder;
 import sk.jazzman.brmi.domain.measurement.MLog;
+import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 
 /**
  * @author jano
@@ -78,7 +79,7 @@ public class ArduinoThread extends Thread {
 	}
 
 	private void createMLog() throws Exception {
-		MLog log = new MLog();
+		MLogArduinoInf log = new MLog();
 		log.setLogDate(new java.sql.Time(System.currentTimeMillis()));
 		log.setValueMeasured(Long.valueOf((new Random().nextLong() * 20l) - 10l));
 		log.setUnitMeasured("celsius");

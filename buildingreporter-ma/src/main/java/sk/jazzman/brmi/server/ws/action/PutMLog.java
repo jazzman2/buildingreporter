@@ -11,7 +11,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.ActionParamGetter;
-import sk.jazzman.brmi.domain.measurement.MLog;
+import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
 import sk.jazzman.brmi.server.ws.RESTServerActionInf;
@@ -43,7 +43,7 @@ public class PutMLog implements RESTServerActionInf, ServerActionInf {
 
 		WebResource resource = client.resource(uri);
 
-		MLog mlog = ActionParamGetter.get("mlog", MLog.class, actionParams);
+		MLogArduinoInf mlog = ActionParamGetter.get("mlog", MLogArduinoInf.class, actionParams);
 
 		String object = sandbox.getXStreamManager().toXML(mlog);
 

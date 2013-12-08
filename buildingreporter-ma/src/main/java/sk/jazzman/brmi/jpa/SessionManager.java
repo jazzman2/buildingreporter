@@ -3,15 +3,18 @@
  */
 package sk.jazzman.brmi.jpa;
 
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.metamodel.MetadataSources;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import sk.jazzman.brmi.domain.measurement.MLog;
 
 /**
  * @author jano
@@ -49,18 +52,41 @@ public class SessionManager {
 	 * Ensure initialization Session Manager
 	 */
 	private synchronized void ensureInitialize() {
-		try {
-			// Configuration cfg = new Configuration().configure();
-			// serviceRegistry = new
-			// ServiceRegistryBuilder().applySettings(cfg.getImports()).buildServiceRegistry();
-			serviceRegistry = new ServiceRegistryBuilder().configure().buildServiceRegistry();
-			MetadataSources metadataSources = new MetadataSources(serviceRegistry);
-			sessionFactory = metadataSources.buildMetadata().buildSessionFactory();
 
-			isInitialized = true;
-		} catch (Throwable t) {
-			getLogger().error("Could not to init service manager.", t);
+		Properties hProp;
+		try {
+			hProp = loadHibernateProperties("hibernate.properties");
+		} catch (Exception ex) {
+			hProp = null;
+			getLogger().error("Could not to load properties!", ex);
 		}
+
+		if (hProp != null) {
+			try {
+
+				org.hibernate.cfg.Configuration hCfg = new org.hibernate.cfg.Configuration();
+				hCfg.setProperties(hProp);
+				hCfg.addAnnotatedClass(MLog.class);
+
+				serviceRegistry = new ServiceRegistryBuilder().applySettings(hCfg.getProperties()).buildServiceRegistry();
+
+				sessionFactory = hCfg.buildSessionFactory(serviceRegistry);
+
+				isInitialized = true;
+			} catch (Throwable t) {
+				getLogger().error("Could not to init service manager.", t);
+			}
+		} else {
+			isInitialized = false;
+		}
+	}
+
+	private Properties loadHibernateProperties(String fileName) throws Exception {
+		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("hibernate.properties");
+		Properties hibernateProperties = new Properties();
+		hibernateProperties.load(inputStream);
+
+		return hibernateProperties;
 	}
 
 	/**
@@ -117,7 +143,7 @@ public class SessionManager {
 	 * 
 	 * @return
 	 */
-	private synchronized boolean isInitialized() {
+	protected synchronized boolean isInitialized() {
 		return isInitialized;
 	}
 }

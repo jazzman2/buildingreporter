@@ -14,8 +14,9 @@ CREATE TABLE mlog (
     log_date timestamp without time zone NOT NULL,
     value_measured bigint NOT NULL,
     value_transformed bigint,
-    instrument_name VARCHAR(255),
+    instrument_name VARCHAR(50),
 	unit_measured VARCHAR(50),
 	unit_transformed VARCHAR(50)
 );
 
+ALTER TABLE public.mlog OWNER TO br;

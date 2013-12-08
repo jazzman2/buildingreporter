@@ -20,10 +20,11 @@ import sk.jazman.brmi.core.CoreEventResolverInf;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
 import sk.jazzman.brmi.common.ParameterBuilder;
-import sk.jazzman.brmi.domain.measurement.MLog;
+import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
 import sk.jazzman.brmi.server.ws.action.PutMLog;
+import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -106,7 +107,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 						Object value = params.get("value");
 
-						if (value instanceof MLog) {
+						if (value instanceof MLogArduinoInf) {
 							try {
 								perform("/log", new ParameterBuilder().setParameter("mlog", value).build());
 							} catch (Exception ex) {
@@ -126,8 +127,8 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 						Object value = params.get("mlog");
 
-						if (value instanceof MLog) {
-							MLog log = (MLog) value;
+						if (value instanceof MLogInf) {
+							MLogInf log = (MLogInf) value;
 
 							// FIXME: set id
 							// log.setId(id);

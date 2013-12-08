@@ -24,6 +24,7 @@ public class XStreamManager {
 	public XStreamManager() {
 		xstream = new XStream(new DomDriver());
 		xstream.alias("map", Map.class);
+		xstream.alias("mlog", MLog.class);
 		xstream.processAnnotations(MLog.class);
 	}
 

@@ -3,5 +3,9 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-4.0.dtd">
 
 <hibernate-mapping>
-	
+	<class name="sk.jazzman.brmi.domain.measurement.MLog" table="mlog" >
+		<id name="id" column="id" unsaved-value="null">
+			<generator class="native"></generator>
+		</id>
+	</class>
 </hibernate-mapping>

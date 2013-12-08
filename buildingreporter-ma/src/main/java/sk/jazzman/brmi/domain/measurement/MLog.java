@@ -7,13 +7,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Length;
-
-import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -27,29 +27,52 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @Table(name = "mlog")
 @SequenceGenerator(name = "SEQ", sequenceName = "log_seq")
 @XStreamAlias("mlog")
-public class MLog extends MAEntity implements MLogInf {
+public class MLog extends MAEntityAbt implements MLogArduinoInf {
 	/** serial id */
 	private static final long serialVersionUID = 1L;
 
+	@Column(name = "id")
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ")
+	private Long id;
+
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@XStreamAlias("valueMeasured")
+	@Column(name = "value_measured")
 	private Long valueMeasured;
 
 	@XStreamAlias("valueTransformed")
+	@Column(name = "value_transformed")
 	private Long valueTransformed;
 
 	@XStreamAlias("logDate")
+	@Column(name = "log_date", nullable = false)
 	private java.util.Date logDate;
 
 	@XStreamAlias("instrumentName")
+	@Column(name = "instrument_name", nullable = false, columnDefinition = "TEXT")
+	@Length(max = 50)
 	private String instrumentName;
 
 	@XStreamAlias("unitMeasured")
+	@Column(name = "unit_measured", nullable = false, columnDefinition = "TEXT")
+	@Length(max = 50)
 	private String unitMeasured;
 
 	@XStreamAlias("unitTransformed")
+	@Column(name = "unit_transformed", columnDefinition = "TEXT")
+	@Length(max = 50)
 	private String unitTransformed;
 
-	@Column(name = "value_measured")
 	@Override
 	public Long getValueMeasured() {
 		return valueMeasured;
@@ -60,7 +83,6 @@ public class MLog extends MAEntity implements MLogInf {
 		this.valueMeasured = valueMeasured;
 	}
 
-	@Column(name = "value_transformed")
 	@Override
 	public Long getValueTransformed() {
 		return valueTransformed;
@@ -71,7 +93,6 @@ public class MLog extends MAEntity implements MLogInf {
 		this.valueTransformed = valueTransformed;
 	}
 
-	@Column(name = "log_date", nullable = false)
 	@Override
 	public Date getLogDate() {
 		return logDate;
@@ -87,9 +108,6 @@ public class MLog extends MAEntity implements MLogInf {
 	 * 
 	 * @return
 	 */
-	@Column(name = "instrument_name", nullable = false, columnDefinition = "TEXT")
-	@Lob
-	@Length(max = 255)
 	public String getInstrumentName() {
 		return instrumentName;
 	}
@@ -108,9 +126,7 @@ public class MLog extends MAEntity implements MLogInf {
 	 * 
 	 * @return
 	 */
-	@Column(name = "unit_measured", nullable = false, columnDefinition = "TEXT")
-	@Length(max = 255)
-	@Lob
+	@Override
 	public String getUnitMeasured() {
 		return unitMeasured;
 	}
@@ -120,6 +136,7 @@ public class MLog extends MAEntity implements MLogInf {
 	 * 
 	 * @param unitMeasured
 	 */
+	@Override
 	public void setUnitMeasured(String unitMeasured) {
 		this.unitMeasured = unitMeasured;
 	}
@@ -129,9 +146,6 @@ public class MLog extends MAEntity implements MLogInf {
 	 * 
 	 * @return
 	 */
-	@Column(name = "unit_transformed", columnDefinition = "TEXT")
-	@Length(max = 255)
-	@Lob
 	public String getUnitTransformed() {
 		return unitTransformed;
 	}
