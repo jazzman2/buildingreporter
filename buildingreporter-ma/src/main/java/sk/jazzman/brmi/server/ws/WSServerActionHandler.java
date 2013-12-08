@@ -105,13 +105,13 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 					public void resolve(CoreEventInf event) throws Exception {
 						Map<String, Object> params = (Map<String, Object>) event.getParameters();
 
-						Object value = params.get("value");
+						Object value = params.get("mlog");
 
 						if (value instanceof MLogArduinoInf) {
 							try {
-								perform("/log", new ParameterBuilder().setParameter("mlog", value).build());
+								perform(PutMLog.getName(), new ParameterBuilder().setParameter("mlog", value).build());
 							} catch (Exception ex) {
-								getLogger().error("Could not to sent to server!");
+								getLogger().error("Could not to sent to server!", ex);
 								// FIXME:
 							}
 						} else {
