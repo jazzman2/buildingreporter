@@ -44,6 +44,13 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	private CoreEventHandlerInf coreEventHandler;
 	private Client client;
 
+	private int state = NOT_INITIALIZED;
+
+	public static final int NOT_INITIALIZED = 0;
+	public static final int INITIALIZED = 0;
+	public static final int CONNECTED = 0;
+	public static final int DISCONNECTED = 0;
+
 	/**
 	 * {@link Constructor}
 	 * 
@@ -72,6 +79,24 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	}
 
 	/**
+	 * Return state
+	 * 
+	 * @return
+	 */
+	public synchronized int getState() {
+		return state;
+	}
+
+	/**
+	 * Setter state
+	 * 
+	 * @param state
+	 */
+	private synchronized void setState(int state) {
+		this.state = state;
+	}
+
+	/**
 	 * init action handler
 	 * 
 	 * @param configuration
@@ -81,14 +106,18 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	public void init(SandboxInf sandbox) throws Exception {
 		super.init(sandbox);
 
+		setState(NOT_INITIALIZED);
+
 		actionRegister = new WSActionRegister();
-		actionRegister.registerActions();
+		actionRegister.registerAll();
 
 		ClientConfig config = new DefaultClientConfig();
 
 		client = Client.create(config);
 
 		initCoreEventHandler(sandbox);
+
+		setState(INITIALIZED);
 	}
 
 	/**
@@ -150,7 +179,8 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 	@Override
 	public Map<String, Object> perform(String actionName, Map<String, Object> actionParams) throws Exception {
-		RESTServerActionInf action = (RESTServerActionInf) getActionRegister().getAction(actionName);
+
+		RESTServerActionInf action = (RESTServerActionInf) getActionRegister().get(actionName);
 
 		Map<String, Object> systemParams = createSystemParams();
 
@@ -172,4 +202,21 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 		return retVal;
 	}
 
+	/**
+	 * ? true if is connected
+	 * 
+	 * @return
+	 */
+	public boolean isConnected() {
+		return CONNECTED == getState();
+	}
+
+	/**
+	 * ? true if is initialized
+	 * 
+	 * @return
+	 */
+	public boolean isInitialized() {
+		return INITIALIZED == getState();
+	}
 }

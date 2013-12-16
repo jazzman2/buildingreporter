@@ -15,9 +15,12 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 import sk.jazzman.buildingreporter.domain.instrument.Instrument;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
+@XStreamAlias("mlog")
 public class MLog implements MLogInf {
 
 	/** serial id */
@@ -46,5 +49,5 @@ public class MLog implements MLogInf {
 
 	@NotNull
 	@ManyToOne
-	private Instrument aparature;
+	private Instrument instrument;
 }

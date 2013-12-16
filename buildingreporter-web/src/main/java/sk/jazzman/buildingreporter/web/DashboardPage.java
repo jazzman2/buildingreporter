@@ -29,6 +29,16 @@ public class DashboardPage extends PageAbt {
 	/** Serial id */
 	private static final long serialVersionUID = 1L;
 
+	// @SpringBean(name = "serialization")
+	// XStreamManager sm;
+	//
+	// @SpringBean(name = "configuration")
+	// Configuration cfg;
+	//
+	// @SpringBean(name = "test")
+	// @Autowired
+	// TestBean test;
+
 	@Override
 	protected void construct() {
 		super.construct();

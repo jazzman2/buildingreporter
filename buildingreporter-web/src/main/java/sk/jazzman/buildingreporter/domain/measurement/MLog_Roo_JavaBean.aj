@@ -58,12 +58,12 @@ privileged aspect MLog_Roo_JavaBean {
         this.unitMeasured = unitMeasured;
     }
     
-    public Instrument MLog.getAparature() {
-        return this.aparature;
+    public Instrument MLog.getInstrument() {
+        return this.instrument;
     }
     
-    public void MLog.setAparature(Instrument aparature) {
-        this.aparature = aparature;
+    public void MLog.setInstrument(Instrument instrument) {
+        this.instrument = instrument;
     }
     
 }

@@ -50,7 +50,7 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 		super.init(sandbox);
 
 		actionRegister = new JPAActionRegister();
-		actionRegister.registerActions();
+		actionRegister.registerAll();
 
 		sessionManager = new SessionManager();
 
@@ -115,7 +115,7 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 			getLogger().error("Session mamager not initialized yet!");
 			retVal = null;
 		} else {
-			JPAActionInf action = getActionRegister().getAction(actionName);
+			JPAActionInf action = getActionRegister().get(actionName);
 
 			Session session = getSessionManager().getSession();
 

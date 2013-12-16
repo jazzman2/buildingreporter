@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.brmi.server.ws.action.Ping;
+import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet;
 
 /**
  * @author jkovalci
@@ -20,13 +22,18 @@ public class ServerConnectionThread extends Thread {
 	private static final Logger log = LoggerFactory.getLogger(ServerConnectionThread.class);
 
 	private final Sandbox sandbox;
+	private final Application application;
 
 	/**
 	 * {@link Constructor}
 	 * 
+	 * @param a
+	 * @param sandbox
+	 * 
 	 */
-	public ServerConnectionThread(Sandbox sandbox) {
+	public ServerConnectionThread(Application a, Sandbox sandbox) {
 		this.sandbox = sandbox;
+		this.application = a;
 	}
 
 	/**
@@ -43,8 +50,12 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @return
 	 */
-	private SandboxInf getSandbox() {
+	private synchronized SandboxInf getSandbox() {
 		return sandbox;
+	}
+
+	private synchronized Application getApplication() {
+		return application;
 	}
 
 	@Override
@@ -81,13 +92,22 @@ public class ServerConnectionThread extends Thread {
 	 */
 	protected void check() {
 		try {
+			if (getApplication().hasServerConnection()) {
+				getLogger().debug("ping server ...");
+				getSandbox().getServerActionHandler().perform(Ping.getName(),
+						new ParameterBuilder().setParameter("configuration", getSandbox().getXStreamManager().toXML(getSandbox().getConfiguration())).build());
+				getLogger().debug("Ping server ... done ");
 
-			getLogger().debug(" ping server ...");
-			getSandbox().getServerActionHandler().perform("/register", new ParameterBuilder().setConfiguration(getSandbox().getConfiguration()).build());
-			getLogger().debug(" ping server done ...");
+			} else {
+				if (getSandbox().isInitialized()) {
+					getLogger().info("Register measure instrument");
+					getSandbox().getServerActionHandler().perform(RegisterMeasureInstrumnet.getName(), new ParameterBuilder().setParameter("configuration", getSandbox().getConfiguration()).build());
+					getLogger().info("Register measure instrument ... done");
+				}
+			}
 
 		} catch (Exception e) {
-			getLogger().error("ping server failed", e);
+			getLogger().error("Server action call failed", e);
 		}
 
 		try {

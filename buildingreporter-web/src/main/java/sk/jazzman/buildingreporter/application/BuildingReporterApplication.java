@@ -5,6 +5,7 @@ package sk.jazzman.buildingreporter.application;
 
 import java.io.Serializable;
 
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -32,7 +33,9 @@ public class BuildingReporterApplication extends WebApplication implements Seria
 	protected void init() {
 		super.init();
 
-		getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext, true));
+		getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
+
+		Injector.get().inject(this);
 
 		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");

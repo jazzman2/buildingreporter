@@ -16,9 +16,9 @@ import sk.jazzman.brmi.jpa.action.PutMLog;
 public class JPAActionRegister extends DefaultActionRegisterAbt<JPAActionInf> {
 
 	@Override
-	public void registerActions() throws Exception {
-		registerAction("GET-mlog", new GetMLogs());
-		registerAction("PUT-mlog", new PutMLog());
+	public void registerAll() throws Exception {
+		register("GET-mlog", new GetMLogs());
+		register("PUT-mlog", new PutMLog());
 	}
 
 }

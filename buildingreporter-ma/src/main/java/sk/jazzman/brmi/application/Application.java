@@ -15,6 +15,8 @@ import sk.jazzman.brmi.arduino.ArduinoThread;
 public class Application {
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
+	private boolean hasServerConnection = false;
+
 	/**
 	 * Getter logger
 	 * 
@@ -22,6 +24,24 @@ public class Application {
 	 */
 	private static final Logger getLogger() {
 		return log;
+	}
+
+	/**
+	 * ? true if has server connection
+	 * 
+	 * @return
+	 */
+	public synchronized boolean hasServerConnection() {
+		return hasServerConnection;
+	}
+
+	/**
+	 * Set value hasServerConnection
+	 * 
+	 * @param hasServerConnection
+	 */
+	public synchronized void setServerConnection(boolean hasServerConnection) {
+		this.hasServerConnection = hasServerConnection;
 	}
 
 	public static void main(String[] args) {
@@ -33,7 +53,9 @@ public class Application {
 			getLogger().error("Error during init application: ", ex);
 		}
 
-		ServerConnectionThread t = new ServerConnectionThread(sandbox);
+		Application a = new Application();
+
+		ServerConnectionThread t = new ServerConnectionThread(a, sandbox);
 		t.start();
 
 		ArduinoThread at = new ArduinoThread(sandbox);

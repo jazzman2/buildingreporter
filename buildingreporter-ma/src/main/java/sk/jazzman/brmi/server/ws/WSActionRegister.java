@@ -30,8 +30,8 @@ public class WSActionRegister extends DefaultActionRegisterAbt<ServerActionInf> 
 	 * Register Actions
 	 */
 	@Override
-	public void registerActions() throws Exception {
-		registerAction(RegisterMeasureInstrumnet.getName(), new RegisterMeasureInstrumnet());
-		registerAction(PutMLog.getName(), new PutMLog());
+	public void registerAll() throws Exception {
+		register(RegisterMeasureInstrumnet.getName(), new RegisterMeasureInstrumnet());
+		register(PutMLog.getName(), new PutMLog());
 	}
 }

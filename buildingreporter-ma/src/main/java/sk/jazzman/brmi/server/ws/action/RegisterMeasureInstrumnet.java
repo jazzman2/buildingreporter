@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 
 		getLogger().debug("Call request to: " + uri.getPath());
 
-		String object = sandbox.getXStreamManager().toXML(new ParameterGetter().getConfiguration(actionParams));
+		String object = sandbox.getXStreamManager().toXML(new ParameterGetter().get("configuration", Configuration.class, actionParams).getP);
 
 		return resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, object);
 	}

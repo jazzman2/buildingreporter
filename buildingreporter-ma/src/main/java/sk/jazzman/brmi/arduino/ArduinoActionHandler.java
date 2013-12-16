@@ -86,7 +86,7 @@ public class ArduinoActionHandler extends DefaultActionHandlerAbt<ArduinoActionI
 		super.init(sandbox);
 
 		actionRegister = new ArduinoActionRegister();
-		actionRegister.registerActions();
+		actionRegister.registerAll();
 
 		listener = new SerialPortEventListener() {
 			@Override
@@ -179,7 +179,7 @@ public class ArduinoActionHandler extends DefaultActionHandlerAbt<ArduinoActionI
 			throw new IllegalArgumentException("Null argument");
 		}
 
-		ArduinoActionInf action = getActionRegister().getAction(actionName);
+		ArduinoActionInf action = getActionRegister().get(actionName);
 
 		Map<String, Object> retVal;
 

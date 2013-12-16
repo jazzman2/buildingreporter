@@ -23,6 +23,11 @@ import com.sun.jersey.api.client.WebResource;
  */
 public class Ping implements ServerActionInf, RESTServerActionInf {
 
+	/**
+	 * Return Action Name
+	 * 
+	 * @return
+	 */
 	public static final String getName() {
 		return "/ping";
 	}

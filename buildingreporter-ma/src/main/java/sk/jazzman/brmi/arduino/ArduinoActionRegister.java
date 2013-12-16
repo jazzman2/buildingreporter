@@ -12,7 +12,7 @@ import sk.jazzman.brmi.common.DefaultActionRegisterAbt;
 public class ArduinoActionRegister extends DefaultActionRegisterAbt<ArduinoActionInf> {
 
 	@Override
-	public void registerActions() throws Exception {
+	public void registerAll() throws Exception {
 		// TODO Auto-generated method stub
 	}
 
