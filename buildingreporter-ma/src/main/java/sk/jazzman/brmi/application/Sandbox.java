@@ -195,7 +195,7 @@ public class Sandbox implements SandboxInf {
 	 * @throws Exception
 	 */
 	private String getMacAddress() throws Exception {
-		InetAddress ip = InetAddress.getLocalHost();
+		// InetAddress ip = InetAddress.getLocalHost();
 
 		Enumeration<NetworkInterface> ifcs = NetworkInterface.getNetworkInterfaces();
 
@@ -206,7 +206,22 @@ public class Sandbox implements SandboxInf {
 			break;
 		}
 
-		return new String(mac != null ? mac : new byte[] {});
+		String retVal;
+
+		if (mac != null) {
+			StringBuilder sb = new StringBuilder();
+
+			for (byte b : mac) {
+				sb.append(String.format("%02X ", b));
+			}
+
+			retVal = sb.toString();
+
+		} else {
+			retVal = null;
+		}
+
+		return retVal;
 	}
 
 	/**

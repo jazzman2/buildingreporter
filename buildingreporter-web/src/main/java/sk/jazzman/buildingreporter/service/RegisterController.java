@@ -3,6 +3,8 @@
  */
 package sk.jazzman.buildingreporter.service;
 
+import java.io.StringReader;
+
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.slf4j.Logger;
@@ -40,11 +42,14 @@ public class RegisterController {
 			logger.debug("Name " + configuration);
 
 			try {
-				XMLConfiguration miConfig = serialization.toObject(configuration);
 
-				miConfig.setExpressionEngine(new XPathExpressionEngine());
+				XMLConfiguration cfg = new XMLConfiguration();
 
-				Instrument.register(miConfig);
+				cfg.setExpressionEngine(new XPathExpressionEngine());
+
+				cfg.load(new StringReader(configuration));
+
+				Instrument.register(cfg);
 			} catch (Exception e) {
 				logger.error("Could not to create masure instrment configuration!", e);
 			}

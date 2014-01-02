@@ -28,9 +28,9 @@ privileged aspect BPart_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM BPart o", BPart.class).getResultList();
     }
     
-    public static BPart BPart.findBPart(Long id_) {
-        if (id_ == null) return null;
-        return entityManager().find(BPart.class, id_);
+    public static BPart BPart.findBPart(Long id) {
+        if (id == null) return null;
+        return entityManager().find(BPart.class, id);
     }
     
     public static List<BPart> BPart.findBPartEntries(int firstResult, int maxResults) {
@@ -49,7 +49,7 @@ privileged aspect BPart_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            BPart attached = BPart.findBPart(this.id_);
+            BPart attached = BPart.findBPart(this.id);
             this.entityManager.remove(attached);
         }
     }

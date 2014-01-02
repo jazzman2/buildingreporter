@@ -1,7 +1,11 @@
 package sk.jazzman.buildingreporter.domain.instrument;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -15,10 +19,12 @@ import org.springframework.roo.addon.tostring.RooToString;
 import org.springframework.transaction.annotation.Transactional;
 
 import sk.jazzman.buildingreporter.domain.building.BPart;
+import sk.jazzman.buildingreporter.domain.building.BuildingConfigurationHelper;
 
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
+@SequenceGenerator(name = "SEQ", sequenceName = "instrument_seq")
 public class Instrument implements InstrumentInf {
 
 	/** Serial id */
@@ -35,8 +41,10 @@ public class Instrument implements InstrumentInf {
 
 	/**
      */
+	@Id
 	@NotNull
-	@Column(unique = true)
+	@Column(unique = true, name = "id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ")
 	private Long id;
 
 	/**
@@ -59,6 +67,9 @@ public class Instrument implements InstrumentInf {
 		Instrument i = (Instrument) createCriteria().add(Restrictions.eq("name", name)).uniqueResult();
 		InstrumentInf retVal;
 		if (i == null) {
+			i = new Instrument();
+			i.setName(name);
+			i.setPart(BuildingConfigurationHelper.getUndefinedBuilding(configuration));
 			i.persist();
 		}
 

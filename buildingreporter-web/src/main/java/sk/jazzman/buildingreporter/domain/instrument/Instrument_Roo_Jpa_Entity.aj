@@ -5,9 +5,6 @@ package sk.jazzman.buildingreporter.domain.instrument;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Version;
 import sk.jazzman.buildingreporter.domain.instrument.Instrument;
 
@@ -15,22 +12,9 @@ privileged aspect Instrument_Roo_Jpa_Entity {
     
     declare @type: Instrument: @Entity;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_")
-    private Long Instrument.id_;
-    
     @Version
     @Column(name = "version")
     private Integer Instrument.version;
-    
-    public Long Instrument.getId_() {
-        return this.id_;
-    }
-    
-    public void Instrument.setId_(Long id) {
-        this.id_ = id;
-    }
     
     public Integer Instrument.getVersion() {
         return this.version;

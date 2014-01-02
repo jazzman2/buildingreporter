@@ -28,9 +28,9 @@ privileged aspect BType_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM BType o", BType.class).getResultList();
     }
     
-    public static BType BType.findBType(Long id_) {
-        if (id_ == null) return null;
-        return entityManager().find(BType.class, id_);
+    public static BType BType.findBType(Long id) {
+        if (id == null) return null;
+        return entityManager().find(BType.class, id);
     }
     
     public static List<BType> BType.findBTypeEntries(int firstResult, int maxResults) {
@@ -49,7 +49,7 @@ privileged aspect BType_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            BType attached = BType.findBType(this.id_);
+            BType attached = BType.findBType(this.id);
             this.entityManager.remove(attached);
         }
     }

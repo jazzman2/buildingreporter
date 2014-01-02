@@ -5,9 +5,6 @@ package sk.jazzman.buildingreporter.domain.building;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Version;
 import sk.jazzman.buildingreporter.domain.building.BType;
 
@@ -15,22 +12,9 @@ privileged aspect BType_Roo_Jpa_Entity {
     
     declare @type: BType: @Entity;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_")
-    private Long BType.id_;
-    
     @Version
     @Column(name = "version")
     private Integer BType.version;
-    
-    public Long BType.getId_() {
-        return this.id_;
-    }
-    
-    public void BType.setId_(Long id) {
-        this.id_ = id;
-    }
     
     public Integer BType.getVersion() {
         return this.version;

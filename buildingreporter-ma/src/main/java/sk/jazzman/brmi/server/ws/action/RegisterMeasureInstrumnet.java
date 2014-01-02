@@ -3,13 +3,14 @@
  */
 package sk.jazzman.brmi.server.ws.action;
 
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +67,20 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 
 		getLogger().debug("Call request to: " + uri.getPath());
 
-		String object = sandbox.getXStreamManager().toXML(new ParameterGetter().get("configuration", Configuration.class, actionParams).getP);
+		XMLConfiguration cfg = new ParameterGetter().get("configuration", XMLConfiguration.class, actionParams);
+
+		// String object = ConfigurationUtils.toString(cfg);
+
+		// String object = sandbox.getXStreamManager().toXML(cfg);
+
+		StringWriter sw = new StringWriter();
+
+		// ConfigurationUtils.dump(cfg, new PrintWriter(sw));
+
+		cfg.save(sw);
+
+		String object = sw.toString();
 
 		return resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, object);
 	}
-
 }

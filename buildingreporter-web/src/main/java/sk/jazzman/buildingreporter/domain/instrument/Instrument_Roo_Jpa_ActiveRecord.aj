@@ -28,9 +28,9 @@ privileged aspect Instrument_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Instrument o", Instrument.class).getResultList();
     }
     
-    public static Instrument Instrument.findInstrument(Long id_) {
-        if (id_ == null) return null;
-        return entityManager().find(Instrument.class, id_);
+    public static Instrument Instrument.findInstrument(Long id) {
+        if (id == null) return null;
+        return entityManager().find(Instrument.class, id);
     }
     
     public static List<Instrument> Instrument.findInstrumentEntries(int firstResult, int maxResults) {
@@ -49,7 +49,7 @@ privileged aspect Instrument_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            Instrument attached = Instrument.findInstrument(this.id_);
+            Instrument attached = Instrument.findInstrument(this.id);
             this.entityManager.remove(attached);
         }
     }

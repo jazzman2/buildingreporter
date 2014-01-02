@@ -44,12 +44,13 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	private CoreEventHandlerInf coreEventHandler;
 	private Client client;
 
-	private int state = NOT_INITIALIZED;
-
 	public static final int NOT_INITIALIZED = 0;
-	public static final int INITIALIZED = 0;
-	public static final int CONNECTED = 0;
-	public static final int DISCONNECTED = 0;
+	public static final int INITIALIZED = 1;
+	public static final int CONNECTED = 2;
+	public static final int DISCONNECTED = 2;
+
+	private int initState = NOT_INITIALIZED;
+	private int connectionState = DISCONNECTED;
 
 	/**
 	 * {@link Constructor}
@@ -83,17 +84,35 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * 
 	 * @return
 	 */
-	public synchronized int getState() {
-		return state;
+	public synchronized int getConnectionState() {
+		return connectionState;
 	}
 
 	/**
-	 * Setter state
+	 * Setter connection state state
 	 * 
 	 * @param state
 	 */
-	private synchronized void setState(int state) {
-		this.state = state;
+	private synchronized void setConnectionState(int connectionState) {
+		this.connectionState = connectionState;
+	}
+
+	/**
+	 * Return state
+	 * 
+	 * @return
+	 */
+	public synchronized int getInitializationState() {
+		return initState;
+	}
+
+	/**
+	 * Setter initialization state
+	 * 
+	 * @param initState
+	 */
+	private synchronized void setInitializationState(int initState) {
+		this.initState = initState;
 	}
 
 	/**
@@ -106,7 +125,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	public void init(SandboxInf sandbox) throws Exception {
 		super.init(sandbox);
 
-		setState(NOT_INITIALIZED);
+		setInitializationState(NOT_INITIALIZED);
 
 		actionRegister = new WSActionRegister();
 		actionRegister.registerAll();
@@ -117,7 +136,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 		initCoreEventHandler(sandbox);
 
-		setState(INITIALIZED);
+		setInitializationState(INITIALIZED);
 	}
 
 	/**
@@ -208,7 +227,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * @return
 	 */
 	public boolean isConnected() {
-		return CONNECTED == getState();
+		return isInitialized() && (CONNECTED == getConnectionState());
 	}
 
 	/**
@@ -217,6 +236,6 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * @return
 	 */
 	public boolean isInitialized() {
-		return INITIALIZED == getState();
+		return INITIALIZED == getInitializationState();
 	}
 }
