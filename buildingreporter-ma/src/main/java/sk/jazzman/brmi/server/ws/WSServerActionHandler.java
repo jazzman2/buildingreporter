@@ -24,6 +24,7 @@ import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
 import sk.jazzman.brmi.server.ws.action.PutMLog;
+import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet;
 import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
 
 import com.sun.jersey.api.client.Client;
@@ -47,7 +48,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	public static final int NOT_INITIALIZED = 0;
 	public static final int INITIALIZED = 1;
 	public static final int CONNECTED = 2;
-	public static final int DISCONNECTED = 2;
+	public static final int DISCONNECTED = 3;
 
 	private int initState = NOT_INITIALIZED;
 	private int connectionState = DISCONNECTED;
@@ -140,6 +141,44 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	}
 
 	/**
+	 * Ensure connect to server
+	 * 
+	 * @throws Exception
+	 */
+	private synchronized void ensureConnect() throws Exception {
+
+		setConnectionState(DISCONNECTED);
+
+		ensureInitialize();
+
+		if (isInitialized() && !isConnected()) {
+			getLogger().info("Register measure instrument");
+			// Map<String, Object> retVal =
+			// getSandbox().getServerActionHandler().perform(RegisterMeasureInstrumnet.getName(),
+			// new ParameterBuilder().setParameter("configuration",
+			// getSandbox().getConfiguration()).build());
+
+			Map<String, Object> retVal = performServerAction(RegisterMeasureInstrumnet.getName(), new ParameterBuilder().setParameter("configuration", getSandbox().getConfiguration()).build());
+
+			getLogger().info("Register measure instrument ... done (id=" + RegisterMeasureInstrumnet.Output.getId(retVal) + ")");
+
+			setConnectionState(CONNECTED);
+		}
+	}
+
+	/**
+	 * Ensure init
+	 * 
+	 * @throws Exception
+	 */
+	private synchronized void ensureInitialize() throws Exception {
+
+		if (!isInitialized()) {
+			init(getSandbox());
+		}
+	}
+
+	/**
 	 * Init core event handler
 	 * 
 	 * @param sandbox
@@ -198,14 +237,45 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 	@Override
 	public Map<String, Object> perform(String actionName, Map<String, Object> actionParams) throws Exception {
+		Map<String, Object> retVal;
 
+		// if (isConnected()) {
+		//
+		// } else {
+		// retVal = null;
+		// }
+		//
+		// if (!isConnected()){
+		//
+		// }
+
+		ensureConnect();
+
+		if (isConnected()) {
+			retVal = performServerAction(actionName, actionParams);
+		} else {
+			retVal = null;
+		}
+
+		return retVal;
+	}
+
+	/**
+	 * Perform Server Action
+	 * 
+	 * @param actionName
+	 * @param actionParams
+	 * @return
+	 * @throws Exception
+	 */
+	private Map<String, Object> performServerAction(String actionName, Map<String, Object> actionParams) throws Exception {
 		RESTServerActionInf action = (RESTServerActionInf) getActionRegister().get(actionName);
 
 		Map<String, Object> systemParams = createSystemParams();
 
 		ClientResponse response = action.performRequest(getClient(), actionParams, systemParams, getSandbox());
 
-		return action.handleResponse(response);
+		return action.handleResponse(response, getSandbox());
 	}
 
 	/**

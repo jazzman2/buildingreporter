@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.common.ParameterBuilder;
 import sk.jazzman.brmi.server.ws.action.Ping;
-import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet;
 
 /**
  * @author jkovalci
@@ -99,11 +98,13 @@ public class ServerConnectionThread extends Thread {
 				getLogger().debug("Ping server ... done ");
 
 			} else {
-				if (getSandbox().isInitialized()) {
-					getLogger().info("Register measure instrument");
-					getSandbox().getServerActionHandler().perform(RegisterMeasureInstrumnet.getName(), new ParameterBuilder().setParameter("configuration", getSandbox().getConfiguration()).build());
-					getLogger().info("Register measure instrument ... done");
-				}
+				// if (getSandbox().isInitialized()) {
+				// getLogger().info("Register measure instrument");
+				// getSandbox().getServerActionHandler().perform(RegisterMeasureInstrumnet.getName(),
+				// new ParameterBuilder().setParameter("configuration",
+				// getSandbox().getConfiguration()).build());
+				// getLogger().info("Register measure instrument ... done");
+				// }
 			}
 
 		} catch (Exception e) {

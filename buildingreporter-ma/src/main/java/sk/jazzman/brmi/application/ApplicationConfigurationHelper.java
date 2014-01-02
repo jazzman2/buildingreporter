@@ -68,4 +68,18 @@ public class ApplicationConfigurationHelper {
 
 		((HierarchicalConfiguration) configuration).addProperty("mi/ip_address", ipAddress);
 	}
+
+	/**
+	 * Getter Measure instrument name
+	 * 
+	 * @param configuration
+	 * @return
+	 */
+	public static final String getName(Configuration configuration) {
+		if (configuration == null) {
+			throw new IllegalArgumentException("Null argument!");
+		}
+
+		return ((HierarchicalConfiguration) configuration).getString("mi/name", null);
+	}
 }

@@ -32,8 +32,9 @@ public interface RESTServerActionInf {
 	 * Handle response
 	 * 
 	 * @param response
+	 * @param sandbox
 	 * 
 	 * @return
 	 */
-	public Map<String, Object> handleResponse(ClientResponse response) throws Exception;
+	public Map<String, Object> handleResponse(ClientResponse response, SandboxInf sandbox) throws Exception;
 }

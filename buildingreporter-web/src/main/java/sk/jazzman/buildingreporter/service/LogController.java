@@ -3,6 +3,8 @@
  */
 package sk.jazzman.buildingreporter.service;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,11 @@ public class LogController {
 
 		if (mlog != null) {
 			logger.debug("Name " + mlog);
-			MLogInf mlogObject = serialization.toObject(mlog);
+
+			Map<String, Object> params = serialization.toObject(mlog);
+
+			MLogInf mlogObject = (MLogInf) params.get("mlog");
+			String miName = (String) params.get("mi.name");
 
 			logger.debug("Mlog Object: " + mlogObject.getValueMeasured());
 

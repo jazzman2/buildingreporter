@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.ParameterGetter;
-import sk.jazzman.brmi.server.ServerActionInf;
-import sk.jazzman.brmi.server.ws.RESTServerActionInf;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -29,7 +27,7 @@ import com.sun.jersey.api.client.WebResource;
  * @author jano
  * 
  */
-public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerActionInf {
+public class RegisterMeasureInstrumnet extends RESTServerActionAbt {
 
 	private static final Logger log = LoggerFactory.getLogger(RegisterMeasureInstrumnet.class);
 
@@ -49,12 +47,6 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 	 */
 	private Logger getLogger() {
 		return log;
-	}
-
-	@Override
-	public Map<String, Object> handleResponse(ClientResponse response) throws Exception {
-
-		return null;
 	}
 
 	@Override
@@ -82,5 +74,17 @@ public class RegisterMeasureInstrumnet implements RESTServerActionInf, ServerAct
 		String object = sw.toString();
 
 		return resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, object);
+	}
+
+	/**
+	 * Output params getter
+	 * 
+	 * @author jano
+	 * 
+	 */
+	public static class Output {
+		public static Long getId(Map<String, Object> params) {
+			return (Long) params.get("instrument.id");
+		}
 	}
 }
