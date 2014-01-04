@@ -12,11 +12,18 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import sk.jazzman.buildingreporter.domain.BREntityInf;
+
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
 @SequenceGenerator(name = "SEQ", sequenceName = "btype_seq")
-public class BType {
+public class BType implements BREntityInf {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
      */

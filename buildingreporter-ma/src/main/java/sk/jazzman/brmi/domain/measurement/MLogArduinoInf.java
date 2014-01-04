@@ -24,4 +24,8 @@ public interface MLogArduinoInf extends MLogInf {
 	 * @return
 	 */
 	public String getUnitMeasured();
+
+	public void setSensorId(String sensorId);
+
+	public String getSensorId();
 }

@@ -46,4 +46,13 @@ public class CoreEventManager implements CoreEventManagerInf {
 
 		register.remove(name);
 	}
+
+	@Override
+	public CoreEventHandlerInf get(String name) {
+		if (name == null) {
+			throw new IllegalArgumentException("Null argument!");
+		}
+
+		return register.get(name);
+	}
 }

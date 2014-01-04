@@ -31,4 +31,12 @@ public interface CoreEventManagerInf {
 	 * @param name
 	 */
 	public void unregister(String name);
+
+	/**
+	 * Return {@link CoreEventHandlerInf} by name
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public CoreEventHandlerInf get(String name);
 }

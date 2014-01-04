@@ -45,13 +45,30 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	private CoreEventHandlerInf coreEventHandler;
 	private Client client;
 
-	public static final int NOT_INITIALIZED = 0;
-	public static final int INITIALIZED = 1;
-	public static final int CONNECTED = 2;
-	public static final int DISCONNECTED = 3;
+	private final ServerActionHandlerStateInf state = new ServerActionHandlerStateInf() {
+		private int initState = NOT_INITIALIZED;
+		private int connectionState = DISCONNECTED;
 
-	private int initState = NOT_INITIALIZED;
-	private int connectionState = DISCONNECTED;
+		@Override
+		public synchronized void setInitializationState(int initState) {
+			this.initState = initState;
+		}
+
+		@Override
+		public synchronized void setConnectionState(int connectionState) {
+			this.connectionState = connectionState;
+		}
+
+		@Override
+		public synchronized int getInitializationState() {
+			return initState;
+		}
+
+		@Override
+		public synchronized int getConnectionState() {
+			return connectionState;
+		}
+	};
 
 	/**
 	 * {@link Constructor}
@@ -85,35 +102,8 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * 
 	 * @return
 	 */
-	public synchronized int getConnectionState() {
-		return connectionState;
-	}
-
-	/**
-	 * Setter connection state state
-	 * 
-	 * @param state
-	 */
-	private synchronized void setConnectionState(int connectionState) {
-		this.connectionState = connectionState;
-	}
-
-	/**
-	 * Return state
-	 * 
-	 * @return
-	 */
-	public synchronized int getInitializationState() {
-		return initState;
-	}
-
-	/**
-	 * Setter initialization state
-	 * 
-	 * @param initState
-	 */
-	private synchronized void setInitializationState(int initState) {
-		this.initState = initState;
+	public synchronized ServerActionHandlerStateInf getState() {
+		return state;
 	}
 
 	/**
@@ -123,21 +113,27 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * 
 	 */
 	@Override
-	public void init(SandboxInf sandbox) throws Exception {
+	public synchronized void init(SandboxInf sandbox) throws Exception {
 		super.init(sandbox);
 
-		setInitializationState(NOT_INITIALIZED);
+		if (!isInitialized()) {
+			getState().setInitializationState(ServerActionHandlerStateInf.INITIALIZATION_IN_PROGRESS);
 
-		actionRegister = new WSActionRegister();
-		actionRegister.registerAll();
+			getLogger().info("Init Server Action Handler. [START]");
 
-		ClientConfig config = new DefaultClientConfig();
+			actionRegister = new WSActionRegister();
+			actionRegister.registerAll();
 
-		client = Client.create(config);
+			ClientConfig config = new DefaultClientConfig();
 
-		initCoreEventHandler(sandbox);
+			client = Client.create(config);
 
-		setInitializationState(INITIALIZED);
+			initCoreEventHandler(sandbox);
+
+			getState().setInitializationState(ServerActionHandlerStateInf.INITIALIZED);
+
+			getLogger().info("Init Server Action Handler. [DONE]");
+		}
 	}
 
 	/**
@@ -147,22 +143,24 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 */
 	private synchronized void ensureConnect() throws Exception {
 
-		setConnectionState(DISCONNECTED);
+		// setConnectionState(DISCONNECTED);
 
 		ensureInitialize();
 
 		if (isInitialized() && !isConnected()) {
-			getLogger().info("Register measure instrument");
-			// Map<String, Object> retVal =
-			// getSandbox().getServerActionHandler().perform(RegisterMeasureInstrumnet.getName(),
-			// new ParameterBuilder().setParameter("configuration",
-			// getSandbox().getConfiguration()).build());
+			getLogger().info("Register measure instrument started.");
 
 			Map<String, Object> retVal = performServerAction(RegisterMeasureInstrumnet.getName(), new ParameterBuilder().setParameter("configuration", getSandbox().getConfiguration()).build());
+			Long id = RegisterMeasureInstrumnet.Output.getId(retVal);
 
-			getLogger().info("Register measure instrument ... done (id=" + RegisterMeasureInstrumnet.Output.getId(retVal) + ")");
+			if (retVal != null) {
+				getState().setConnectionState(ServerActionHandlerStateInf.CONNECTED);
 
-			setConnectionState(CONNECTED);
+				getLogger().info("Measure Instrument SUCCESSFUL CONNECTED with id=" + id);
+			} else {
+				getLogger().error("Measure Instrument COULD NOT TO CONNECT");
+			}
+
 		}
 	}
 
@@ -232,7 +230,17 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 			}
 		};
 
-		sandbox.getCoreEventManager().register("ServerCoreEventHandler", coreEventHandler);
+		String cehName = "ServerCoreEventHandler";
+
+		CoreEventHandlerInf ceh = sandbox.getCoreEventManager().get(cehName);
+
+		if (ceh == null) {
+			sandbox.getCoreEventManager().register("ServerCoreEventHandler", coreEventHandler);
+		} else if (!ceh.equals(coreEventHandler)) {
+			sandbox.getCoreEventManager().unregister("ServerCoreEventHandler");
+			sandbox.getCoreEventManager().register("ServerCoreEventHandler", coreEventHandler);
+		}
+
 	}
 
 	@Override
@@ -297,7 +305,7 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * @return
 	 */
 	public boolean isConnected() {
-		return isInitialized() && (CONNECTED == getConnectionState());
+		return isInitialized() && (ServerActionHandlerStateInf.CONNECTED == getState().getConnectionState());
 	}
 
 	/**
@@ -306,6 +314,6 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 * @return
 	 */
 	public boolean isInitialized() {
-		return INITIALIZED == getInitializationState();
+		return ServerActionHandlerStateInf.INITIALIZED == getState().getInitializationState();
 	}
 }

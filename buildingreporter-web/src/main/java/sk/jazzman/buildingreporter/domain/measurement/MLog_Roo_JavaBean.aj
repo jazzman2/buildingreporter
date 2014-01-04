@@ -4,6 +4,7 @@
 package sk.jazzman.buildingreporter.domain.measurement;
 
 import java.util.Date;
+import sk.jazzman.buildingreporter.domain.building.BPart;
 import sk.jazzman.buildingreporter.domain.instrument.Instrument;
 import sk.jazzman.buildingreporter.domain.measurement.MLog;
 import sk.jazzman.buildingreporter.domain.measurement.MUnit;
@@ -18,19 +19,19 @@ privileged aspect MLog_Roo_JavaBean {
         this.id = id;
     }
     
-    public Long MLog.getValueMeasured() {
+    public Double MLog.getValueMeasured() {
         return this.valueMeasured;
     }
     
-    public void MLog.setValueMeasured(Long valueMeasured) {
+    public void MLog.setValueMeasured(Double valueMeasured) {
         this.valueMeasured = valueMeasured;
     }
     
-    public Long MLog.getValueTransformed() {
+    public Double MLog.getValueTransformed() {
         return this.valueTransformed;
     }
     
-    public void MLog.setValueTransformed(Long valueTransformed) {
+    public void MLog.setValueTransformed(Double valueTransformed) {
         this.valueTransformed = valueTransformed;
     }
     
@@ -64,6 +65,14 @@ privileged aspect MLog_Roo_JavaBean {
     
     public void MLog.setInstrument(Instrument instrument) {
         this.instrument = instrument;
+    }
+    
+    public BPart MLog.getItem() {
+        return this.item;
+    }
+    
+    public void MLog.setItem(BPart item) {
+        this.item = item;
     }
     
 }

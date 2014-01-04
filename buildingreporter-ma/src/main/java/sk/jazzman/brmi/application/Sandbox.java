@@ -97,6 +97,7 @@ public class Sandbox implements SandboxInf {
 	private void registerServerHandlers() throws Exception {
 		serverActionHandler = new WSServerActionHandler();
 		serverActionHandler.init(this);
+
 	}
 
 	/**

@@ -122,7 +122,9 @@ public class SessionManager {
 	 */
 	private synchronized void ensureInitializeSession() {
 		if (isInitialized()) {
-			session = getSessionFactory().openSession();
+			if (session == null) {
+				session = getSessionFactory().openSession();
+			}
 			isActiveSession = true;
 		} else {
 			isActiveSession = false;

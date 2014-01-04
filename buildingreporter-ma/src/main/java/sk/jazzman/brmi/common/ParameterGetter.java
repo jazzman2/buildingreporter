@@ -8,7 +8,9 @@ import java.util.Map;
 /**
  * @author jkovalci
  * 
+ * @see ActionParamGetter
  */
+@Deprecated
 public class ParameterGetter {
 
 	public static final String INPUT_CONFIGURATION = "p_input_configuration";

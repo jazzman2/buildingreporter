@@ -61,13 +61,7 @@ public class RegisterMeasureInstrumnet extends RESTServerActionAbt {
 
 		XMLConfiguration cfg = new ParameterGetter().get("configuration", XMLConfiguration.class, actionParams);
 
-		// String object = ConfigurationUtils.toString(cfg);
-
-		// String object = sandbox.getXStreamManager().toXML(cfg);
-
 		StringWriter sw = new StringWriter();
-
-		// ConfigurationUtils.dump(cfg, new PrintWriter(sw));
 
 		cfg.save(sw);
 

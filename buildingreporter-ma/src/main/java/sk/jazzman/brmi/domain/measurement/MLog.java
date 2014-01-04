@@ -48,11 +48,11 @@ public class MLog extends MAEntityAbt implements MLogArduinoInf {
 
 	@XStreamAlias("valueMeasured")
 	@Column(name = "value_measured")
-	private Long valueMeasured;
+	private Double valueMeasured;
 
 	@XStreamAlias("valueTransformed")
 	@Column(name = "value_transformed")
-	private Long valueTransformed;
+	private Double valueTransformed;
 
 	@XStreamAlias("logDate")
 	@Column(name = "log_date", nullable = false)
@@ -73,23 +73,28 @@ public class MLog extends MAEntityAbt implements MLogArduinoInf {
 	@Length(max = 50)
 	private String unitTransformed;
 
+	@XStreamAlias("sensorId")
+	@Column(name = "sensor_id", columnDefinition = "TEXT")
+	@Length(max = 50)
+	private String sensorId;
+
 	@Override
-	public Long getValueMeasured() {
+	public Double getValueMeasured() {
 		return valueMeasured;
 	}
 
 	@Override
-	public void setValueMeasured(Long valueMeasured) {
+	public void setValueMeasured(Double valueMeasured) {
 		this.valueMeasured = valueMeasured;
 	}
 
 	@Override
-	public Long getValueTransformed() {
+	public Double getValueTransformed() {
 		return valueTransformed;
 	}
 
 	@Override
-	public void setValueTransformed(Long valueTransformed) {
+	public void setValueTransformed(Double valueTransformed) {
 		this.valueTransformed = valueTransformed;
 	}
 
@@ -159,4 +164,23 @@ public class MLog extends MAEntityAbt implements MLogArduinoInf {
 		this.unitTransformed = unitTransformed;
 	}
 
+	/**
+	 * Getter sensor id
+	 * 
+	 * @return
+	 */
+	@Override
+	public String getSensorId() {
+		return sensorId;
+	}
+
+	/**
+	 * Setter sensor id
+	 * 
+	 * @param sensorId
+	 */
+	@Override
+	public void setSensorId(String sensorId) {
+		this.sensorId = sensorId;
+	}
 }

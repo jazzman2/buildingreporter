@@ -8,8 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import sk.jazzman.buildingreporter.domain.building.BPart;
+import sk.jazzman.buildingreporter.domain.measurement.MLog;
 
 import com.googlecode.wickedcharts.highcharts.options.Axis;
 import com.googlecode.wickedcharts.highcharts.options.Options;
@@ -26,18 +37,11 @@ import com.googlecode.wickedcharts.wicket6.highcharts.Chart;
  */
 public class DashboardPage extends PageAbt {
 
+	@SpringBean(name = "configuration")
+	private Configuration configuration;
+
 	/** Serial id */
 	private static final long serialVersionUID = 1L;
-
-	// @SpringBean(name = "serialization")
-	// XStreamManager sm;
-	//
-	// @SpringBean(name = "configuration")
-	// Configuration cfg;
-	//
-	// @SpringBean(name = "test")
-	// @Autowired
-	// TestBean test;
 
 	@Override
 	protected void construct() {
@@ -72,6 +76,7 @@ public class DashboardPage extends PageAbt {
 		 */
 		protected void construct() {
 			add(newChart("chart"));
+			add(newAktualneTeploty("actualtemperature"));
 		}
 
 		protected Component newChart(String id) {
@@ -96,6 +101,47 @@ public class DashboardPage extends PageAbt {
 			options.setSeries(series);
 
 			return new Chart("chart", options);
+		}
+
+		protected Component newAktualneTeploty(String id) {
+
+			List<MLog> data = new ArrayList<MLog>();
+			MLog l;
+
+			// FIXME: do konfiguracie presunut co zobrazovat
+			for (Long itemId : new Long[] { Long.valueOf(-1), Long.valueOf(4), Long.valueOf(5) }) {
+				l = (MLog) MLog.createCriteria()//
+						.add(Restrictions.eq("item.id", itemId))//
+						.addOrder(Order.desc("logDate"))//
+						.setMaxResults(1).uniqueResult();
+
+				if (l == null) {
+					l = new MLog();
+					l.setItem(BPart.findBPart(itemId));
+				}
+
+				data.add(l);
+			}
+
+			ListDataProvider<MLog> dp = new ListDataProvider<MLog>(data);
+
+			DataView<MLog> dataView = new DataView<MLog>(id, dp) {
+				/** Serial id */
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void populateItem(Item<MLog> item) {
+					item.add(new Label("item.name", item.getModelObject().getItem().getName()));
+
+					Object value = item.getModelObject().getValueMeasured();
+					item.add(new Label("mlog.value_measured", value != null ? value.toString() : ""));
+
+					value = item.getModelObject().getLogDate();
+					item.add(new Label("mlog.log_date", value != null ? value.toString() : ""));
+				}
+			};
+
+			return dataView;
 		}
 	}
 }

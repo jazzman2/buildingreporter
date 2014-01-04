@@ -8,25 +8,30 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import sk.jazzman.buildingreporter.domain.BREntityInf;
+
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
-public class MUnit {
+public class MUnit implements BREntityInf {
+
+	/** serial id */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-    @NotNull
-    @Column(unique = true)
-    private Long id;
+	@NotNull
+	@Column(unique = true)
+	private Long id;
 
-    @NotNull
-    private String name;
+	@NotNull
+	private String name;
 
-    @NotNull
-    private String name_en;
+	@NotNull
+	private String name_en;
 
-    @NotNull
-    private String symbol;
+	@NotNull
+	private String symbol;
 
-    @NotNull
-    private Integer multiple;
+	@NotNull
+	private Integer multiple;
 }

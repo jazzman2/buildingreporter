@@ -5,7 +5,25 @@
 
 	<wicket:extend>
 		<form wicket:id="form">
-			<div>[TABULKA]</div>
+			<div>[Aktualne teploty]</div>
+			
+			<table cellspacing="0" class="dataview">
+				<tr>
+					<th>Polozka</th>
+					<th>Teplota</th>
+					<th>Cas</th>
+				</tr>
+				<tr wicket:id="actualtemperature">
+					<td><span wicket:id="item.name">[bpart.name]</span></td>
+					<td><span wicket:id="mlog.value_measured">[mlog.unit_measured]</span></td>
+					<td><span wicket:id="mlog.log_date">[mlog.log_date]</span></td>
+				</tr>
+			</table>
+
+			<br>
+			<br>
+			
+			<div>[Teplota  24h]</div>
 			<div wicket:id="chart"></div>
 		</form>
 	</wicket:extend>

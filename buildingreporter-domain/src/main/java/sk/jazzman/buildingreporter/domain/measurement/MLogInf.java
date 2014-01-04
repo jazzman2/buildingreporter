@@ -13,13 +13,13 @@ import sk.jazzman.buildingreporter.domain.BREntityInf;
  */
 public interface MLogInf extends BREntityInf {
 
-	public Long getValueMeasured();
+	public Double getValueMeasured();
 
-	public void setValueMeasured(Long valueMeasured);
+	public void setValueMeasured(Double valueMeasured);
 
-	public Long getValueTransformed();
+	public Double getValueTransformed();
 
-	public void setValueTransformed(Long valueTransformed);
+	public void setValueTransformed(Double valueTransformed);
 
 	public java.util.Date getLogDate();
 

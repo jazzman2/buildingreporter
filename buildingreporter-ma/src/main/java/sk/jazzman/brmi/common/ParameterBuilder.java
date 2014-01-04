@@ -17,7 +17,9 @@ import org.apache.commons.configuration.XMLConfiguration;
  * 
  * @author jano
  * 
+ * @see ActionParamBuilder
  */
+@Deprecated
 public class ParameterBuilder {
 	private final Map<String, Object> parameters = new HashMap<String, Object>();
 

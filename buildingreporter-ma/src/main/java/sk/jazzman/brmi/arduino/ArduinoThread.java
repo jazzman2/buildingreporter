@@ -73,16 +73,18 @@ public class ArduinoThread extends Thread {
 				sleep(10000l);
 			} catch (InterruptedException e) {
 				getLogger().debug(" sleep error", e);
-				return;
+				// return;
 			}
 		}
 	}
 
 	private void createMLog() throws Exception {
+
 		MLogArduinoInf log = new MLog();
 		log.setLogDate(new java.sql.Time(System.currentTimeMillis()));
-		log.setValueMeasured(Long.valueOf((new Random().nextLong() * 20l) - 10l));
+		log.setValueMeasured((new Random().nextDouble() * 20.0d) - 10.0d);
 		log.setUnitMeasured("celsius");
+		log.setSensorId("-1");
 
 		getSandbox().getCoreEventManager().fireEvent(
 				new CoreEvent(CoreConfigurationHelper.EVENT_ARDUINO_TEMTERATURE_READ, new ParameterBuilder().setParameter("value", log).build(), ArduinoThread.this));

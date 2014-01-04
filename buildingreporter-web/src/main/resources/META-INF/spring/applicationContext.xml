@@ -57,7 +57,14 @@
 		<context:exclude-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
 	</context:component-scan>
-	
+
+	<context:component-scan base-package="sk.jazzman.buildingreporter.common">
+
+	</context:component-scan>
+
+	<context:component-scan base-package="sk.jazzman.buildingreporter.application">
+
+	</context:component-scan>
 
 	<bean class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close" id="dataSource">
@@ -126,8 +133,9 @@
 	</bean>
 
 	<bean id="serialization" class="sk.jazzman.buildingreporter.application.XStreamManager">
-		
+		<property name="configuration">
+		<ref bean="configuration"/></property>
 	</bean>
-	
-	
+
+
 </beans>

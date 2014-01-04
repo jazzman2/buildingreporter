@@ -26,6 +26,12 @@
 				<munit>
 					<name>celsius</name>
 				</munit>
+				<munit>
+					<name>kelvin</name>
+				</munit>
+				<munit>
+					<name>fahrenheit</name>
+				</munit>
 			</munits>
 		</munit_group>
 	</munit_groups>
@@ -38,4 +44,11 @@
 			<class>java.lang.String</class>
 		</aparameter>
 	</aparameters>
+	
+	<sensors>
+		<sensor>
+			<id>-1</id>
+			<bpart>-1</bpart>
+		</sensor>
+	</sensors>
 </croot>

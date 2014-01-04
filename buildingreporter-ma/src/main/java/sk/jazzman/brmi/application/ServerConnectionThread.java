@@ -4,12 +4,13 @@
 package sk.jazzman.brmi.application;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.brmi.server.ws.ServerActionHandlerStateInf;
+import sk.jazzman.brmi.server.ws.WSServerActionHandler;
 import sk.jazzman.brmi.server.ws.action.Ping;
 
 /**
@@ -21,7 +22,6 @@ public class ServerConnectionThread extends Thread {
 	private static final Logger log = LoggerFactory.getLogger(ServerConnectionThread.class);
 
 	private final Sandbox sandbox;
-	private final Application application;
 
 	/**
 	 * {@link Constructor}
@@ -30,9 +30,8 @@ public class ServerConnectionThread extends Thread {
 	 * @param sandbox
 	 * 
 	 */
-	public ServerConnectionThread(Application a, Sandbox sandbox) {
+	public ServerConnectionThread(Sandbox sandbox) {
 		this.sandbox = sandbox;
-		this.application = a;
 	}
 
 	/**
@@ -53,29 +52,14 @@ public class ServerConnectionThread extends Thread {
 		return sandbox;
 	}
 
-	private synchronized Application getApplication() {
-		return application;
-	}
-
 	@Override
 	public void run() {
 		super.run();
 
-		if (getSandbox().isInitialized()) {
-
-			for (int index = 1; index < 100; index++) {
+		while (true) {
+			if (getSandbox().isInitialized()) {
 				check();
-
-				try {
-					sleep(100000l);
-				} catch (InterruptedException e) {
-					getLogger().debug(" sleep error", e);
-					return;
-				}
 			}
-		} else {
-			getLogger().error("Not initialyzed yet.");
-
 			try {
 				sleep(100000l);
 			} catch (InterruptedException e) {
@@ -90,34 +74,36 @@ public class ServerConnectionThread extends Thread {
 	 * Ping server
 	 */
 	protected void check() {
-		try {
-			if (getApplication().hasServerConnection()) {
-				getLogger().debug("ping server ...");
-				getSandbox().getServerActionHandler().perform(Ping.getName(),
-						new ParameterBuilder().setParameter("configuration", getSandbox().getXStreamManager().toXML(getSandbox().getConfiguration())).build());
-				getLogger().debug("Ping server ... done ");
+		WSServerActionHandler sh = (WSServerActionHandler) getSandbox().getServerActionHandler();
 
-			} else {
-				// if (getSandbox().isInitialized()) {
-				// getLogger().info("Register measure instrument");
-				// getSandbox().getServerActionHandler().perform(RegisterMeasureInstrumnet.getName(),
-				// new ParameterBuilder().setParameter("configuration",
-				// getSandbox().getConfiguration()).build());
-				// getLogger().info("Register measure instrument ... done");
-				// }
+		try {
+			if (!sh.isInitialized()) {
+				getLogger().debug("init server action handler...");
+
+				sh.init(getSandbox());
+
+				getLogger().debug("init server action handler ... done ");
+
 			}
 
 		} catch (Exception e) {
-			getLogger().error("Server action call failed", e);
+			getLogger().error("Init server action handler failed", e);
+			sh.getState().setInitializationState(ServerActionHandlerStateInf.NOT_INITIALIZED);
 		}
 
 		try {
-			getLogger().debug(" try load data from db");
-			// appl.getJpaActionHandler().perform("GET-mlog", new
+			if (!sh.isConnected()) {
+				sh.perform(Ping.getName(), new ParameterBuilder().build());
+			}
+
+			// getLogger().debug(" try load data from db");
+			// // appl.getJpaActionHandler().perform("GET-mlog", new
+			// // HashMap<String, Object>());
+			// getSandbox().getJPAActionHandler().perform("GET-mlog", new
 			// HashMap<String, Object>());
-			getSandbox().getJPAActionHandler().perform("GET-mlog", new HashMap<String, Object>());
 		} catch (Exception e) {
-			getLogger().error("load data failed", e);
+			getLogger().error("Connect  data failed", e);
+			sh.getState().setConnectionState(ServerActionHandlerStateInf.DISCONNECTED);
 		}
 
 	}

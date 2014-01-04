@@ -6,6 +6,7 @@ package sk.jazzman.buildingreporter.common;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jano
  * 
  */
-public class MLogConverter extends EntityConverterAbt {
+public abstract class MLogConverter extends EntityConverterAbt {
 
 	private static final Logger log = LoggerFactory.getLogger(MLogConverter.class);
 
@@ -39,15 +40,33 @@ public class MLogConverter extends EntityConverterAbt {
 		return log;
 	}
 
+	protected abstract Configuration getConfiguration();
+
 	@Override
 	protected void registerAttributeHandlers() {
 		register("id", new AttributeHandler("id", new LongConverter()));
 		register("logDate", new AttributeHandler("logDate", new SqlTimeConverter()));
 		register("valueMeasured", new AttributeHandler("valueMeasured", new LongConverter()));
 		register("valueTransformed", new AttributeHandler("valueTransformed", new LongConverter()));
-		register("unitMeasured", new AttributeHandler("unitMeasured", new UnitTypeConverter()));
-		register("unitTransformed", new AttributeHandler("unitTransformed", new UnitTypeConverter()));
+		register("unitMeasured", new AttributeHandler("unitMeasured", new UnitTypeConverterAbt() {
+			@Override
+			public Configuration getConfiguration() {
+				return MLogConverter.this.getConfiguration();
+			}
+		}));
+		register("unitTransformed", new AttributeHandler("unitTransformed", new UnitTypeConverterAbt() {
+			@Override
+			public Configuration getConfiguration() {
+				return MLogConverter.this.getConfiguration();
+			}
+		}));
 		register("instrumentId", new AttributeHandler("instrument", new InstrumentNameConverter()));
+		register("sensorId", new AttributeHandler("item", new BPartConverterAbt() {
+			@Override
+			public Configuration getConfiguration() {
+				return MLogConverter.this.getConfiguration();
+			}
+		}));
 	}
 
 	@Override

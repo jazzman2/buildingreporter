@@ -26,6 +26,10 @@ public class XStreamManager {
 		xstream.alias("map", Map.class);
 		xstream.alias("mlog", MLog.class);
 		xstream.processAnnotations(MLog.class);
+		// xstream.addDefaultImplementation(java.sql.Timestamp.class,
+		// java.util.Date.class);
+
+		// xstream.aliasAttribute(definedIn, attributeName, alias);
 	}
 
 	/**
