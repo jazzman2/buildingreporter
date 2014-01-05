@@ -16,6 +16,8 @@
 		<property name="hibernate.connection_pool_size">1</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.format_sql">true</property>
+		<property name="hibernate.use_sql_comments">true</property>
 
 		<property name="hibernate.c3p0.acquire_increment">1</property>
 		<property name="hibernate.c3p0.idle_test_period">100</property>
@@ -24,7 +26,7 @@
 		<property name="hibernate.c3p0.min_size">10</property>
 		<property name="hibernate.c3p0.timeout">100</property>
 
-		<mapping class="sk.jazzman.brmi.domain.measurement.MLog2" />
+<!-- 		<mapping class="sk.jazzman.brmi.domain.measurement.MLog2" /> -->
 <!-- 		<mapping class="sk.jazzman.brmi.domain.measurement.MAEntity" /> -->
 
 <!-- 		<mapping resource="sk.jazzman.brmi.domain.measurement.MLog.hbm.xml" /> -->

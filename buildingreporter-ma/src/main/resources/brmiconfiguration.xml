@@ -15,6 +15,7 @@
 	<!-- Arduino -->
 	<arduino>
 		<serialport>
+<!-- 			<name>/dev/ttyACM1</name> -->
 			<name>/dev/ttyUSB0</name>
 			<timeout>2000</timeout>
 			<bitrate>9600</bitrate>

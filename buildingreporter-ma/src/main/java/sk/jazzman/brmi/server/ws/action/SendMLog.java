@@ -11,20 +11,23 @@ import javax.ws.rs.core.UriBuilder;
 
 import sk.jazzman.brmi.application.ApplicationConfigurationHelper;
 import sk.jazzman.brmi.application.SandboxInf;
-import sk.jazzman.brmi.common.ActionParamGetter;
-import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.brmi.domain.measurement.MLog;
 import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamGetter;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 /**
+ * Sendd {@link MLog} to web server
+ * 
  * @author jkovalci
  * 
  */
-public class PutMLog extends RESTServerActionAbt {
+public class SendMLog extends RESTServerActionAbt {
 
 	/**
 	 * Return action name
@@ -45,11 +48,11 @@ public class PutMLog extends RESTServerActionAbt {
 
 		MLogArduinoInf mlog = ActionParamGetter.get("mlog", MLogArduinoInf.class, actionParams);
 
-		ParameterBuilder pb = new ParameterBuilder();
-		pb.setParameter("mlog", mlog);
-		pb.setParameter("mi.name", ApplicationConfigurationHelper.getName(sandbox.getConfiguration()));
-
-		Object object = sandbox.getXStreamManager().toXML(pb.build());
+		Object object = sandbox.getXStreamManager().toXML(//
+				new ActionParamBuilder()//
+						.put("mlog", mlog)//
+						.put("mi.name", ApplicationConfigurationHelper.getName(sandbox.getConfiguration()))//
+						.build());
 
 		return resource.type(MediaType.APPLICATION_XML).put(ClientResponse.class, object);
 

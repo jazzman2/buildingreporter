@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.Length;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 
 /**
  * Measured Log
@@ -55,6 +57,7 @@ public class MLog extends MAEntityAbt implements MLogArduinoInf {
 	private Double valueTransformed;
 
 	@XStreamAlias("logDate")
+	@XStreamConverter(SqlTimestampConverter.class)
 	@Column(name = "log_date", nullable = false)
 	private java.util.Date logDate;
 

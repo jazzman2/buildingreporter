@@ -113,13 +113,6 @@ public class Sandbox implements SandboxInf {
 		ApplicationConfigurationHelper.setMacAddress(getMacAddress(), configuration);
 		ApplicationConfigurationHelper.setIpAddress(getIpAddress(), configuration);
 
-		// configuration = new
-		// PropertiesConfiguration("brmiconfiguration.properties");
-		// configuration.setProperty(ApplicationConfigurationHelper.MI_MAC_ADDRESS,
-		// );
-		// configuration.setProperty(ApplicationConfigurationHelper.MI_IP_ADDRESS,
-		// getIpAddress());
-
 		String url = ServerConfigurationHelper.getServerURL(configuration);
 
 		if (null == url) {
@@ -140,7 +133,7 @@ public class Sandbox implements SandboxInf {
 		try {
 			arduinoActionHandler.init(this);
 		} catch (Exception e) {
-			getLogger().error("Could not to init arduino handler!");
+			getLogger().error("Could not to init arduino handler!", e);
 		}
 	}
 
@@ -196,8 +189,6 @@ public class Sandbox implements SandboxInf {
 	 * @throws Exception
 	 */
 	private String getMacAddress() throws Exception {
-		// InetAddress ip = InetAddress.getLocalHost();
-
 		Enumeration<NetworkInterface> ifcs = NetworkInterface.getNetworkInterfaces();
 
 		byte[] mac = null;

@@ -26,16 +26,24 @@ public abstract class BPartConverterAbt extends AbstractSingleValueConverter {
 	public Object fromString(String str) {
 		BPart retVal;
 
-		if (str == null || "".equals(str.trim())) {
+		String s = str.trim();
+
+		if (str == null || "".equals(s)) {
 			retVal = null;
 		} else {
-			Long bPartId = getConfiguration().getLong("sensors/sensor[id='" + str + "']/bpart", null);
+			Long bPartId = getConfiguration().getLong("sensors/sensor[id='" + s + "']/bpart", null);
+
+			// if (bPartId == null) {
+			// retVal = null;
+			// } else {
+			// retVal = BPart.findBPart(bPartId);
+			// }
 
 			if (bPartId == null) {
-				retVal = null;
-			} else {
-				retVal = BPart.findBPart(bPartId);
+				bPartId = Long.valueOf(-1);
 			}
+
+			retVal = BPart.findBPart(bPartId);
 		}
 
 		return retVal;

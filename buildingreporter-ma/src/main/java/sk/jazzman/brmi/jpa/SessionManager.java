@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazzman.brmi.domain.measurement.MLog;
+import sk.jazzman.brmi.domain.measurement.MLogNotSend;
 
 /**
  * @author jano
@@ -66,7 +67,9 @@ public class SessionManager {
 
 				org.hibernate.cfg.Configuration hCfg = new org.hibernate.cfg.Configuration();
 				hCfg.setProperties(hProp);
+
 				hCfg.addAnnotatedClass(MLog.class);
+				hCfg.addAnnotatedClass(MLogNotSend.class);
 
 				serviceRegistry = new ServiceRegistryBuilder().applySettings(hCfg.getProperties()).buildServiceRegistry();
 

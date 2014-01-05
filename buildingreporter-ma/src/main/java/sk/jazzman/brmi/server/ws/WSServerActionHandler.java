@@ -13,19 +13,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sk.jazman.brmi.core.CoreConfigurationHelper;
+import sk.jazman.brmi.core.CoreEvent;
 import sk.jazman.brmi.core.CoreEventHandlerAbt;
 import sk.jazman.brmi.core.CoreEventHandlerInf;
 import sk.jazman.brmi.core.CoreEventInf;
 import sk.jazman.brmi.core.CoreEventResolverInf;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
-import sk.jazzman.brmi.common.ParameterBuilder;
 import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
 import sk.jazzman.brmi.server.ServerActionInf;
 import sk.jazzman.brmi.server.ServerConfigurationHelper;
-import sk.jazzman.brmi.server.ws.action.PutMLog;
+import sk.jazzman.brmi.server.ws.action.SendMLog;
 import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet;
 import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -143,14 +144,12 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	 */
 	private synchronized void ensureConnect() throws Exception {
 
-		// setConnectionState(DISCONNECTED);
-
 		ensureInitialize();
 
 		if (isInitialized() && !isConnected()) {
 			getLogger().info("Register measure instrument started.");
 
-			Map<String, Object> retVal = performServerAction(RegisterMeasureInstrumnet.getName(), new ParameterBuilder().setParameter("configuration", getSandbox().getConfiguration()).build());
+			Map<String, Object> retVal = performServerAction(RegisterMeasureInstrumnet.getName(), new ActionParamBuilder().put("configuration", getSandbox().getConfiguration()).build());
 			Long id = RegisterMeasureInstrumnet.Output.getId(retVal);
 
 			if (retVal != null) {
@@ -194,10 +193,12 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 
 						if (value instanceof MLogArduinoInf) {
 							try {
-								perform(PutMLog.getName(), new ParameterBuilder().setParameter("mlog", value).build());
+								perform(SendMLog.getName(), new ActionParamBuilder().put("mlog", value).build());
 							} catch (Exception ex) {
-								getLogger().error("Could not to sent to server!", ex);
-								// FIXME:
+								getLogger().error("Could not to sent mlog to server!", ex);
+
+								getSandbox().getCoreEventManager().fireEvent(
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_SEND_UNSUCCESS, new ActionParamBuilder().put("value", value).build(), WSServerActionHandler.this));
 							}
 						} else {
 							throw new UnsupportedDataTypeException("Not supported data type!");
@@ -215,12 +216,10 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 						if (value instanceof MLogInf) {
 							MLogInf log = (MLogInf) value;
 
-							// FIXME: set id
-							// log.setId(id);
 							try {
-								perform(PutMLog.getName(), new ParameterBuilder().setParameter("mlog", value).build());
+								perform(SendMLog.getName(), new ActionParamBuilder().put("mlog", log).build());
 							} catch (Exception ex) {
-								getLogger().error("Could not to sent to server!", ex);
+								getLogger().error("Could not to sent mlog to server!", ex);
 							}
 						} else {
 							throw new UnsupportedDataTypeException("Not supported data type!");
@@ -246,16 +245,6 @@ public class WSServerActionHandler extends DefaultActionHandlerAbt<ServerActionI
 	@Override
 	public Map<String, Object> perform(String actionName, Map<String, Object> actionParams) throws Exception {
 		Map<String, Object> retVal;
-
-		// if (isConnected()) {
-		//
-		// } else {
-		// retVal = null;
-		// }
-		//
-		// if (!isConnected()){
-		//
-		// }
 
 		ensureConnect();
 

@@ -21,3 +21,10 @@ CREATE TABLE mlog (
 );
 
 ALTER TABLE public.mlog OWNER TO br;
+
+CREATE TABLE mlog_not_send (
+    id bigint NOT NULL PRIMARY KEY,
+    mlog bigint NOT NULL
+);
+
+ALTER TABLE public.mlog_not_send OWNER TO br;

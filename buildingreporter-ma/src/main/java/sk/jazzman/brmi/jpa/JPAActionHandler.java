@@ -18,8 +18,10 @@ import sk.jazman.brmi.core.CoreEventInf;
 import sk.jazman.brmi.core.CoreEventResolverInf;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
-import sk.jazzman.brmi.common.ParameterBuilder;
 import sk.jazzman.brmi.domain.measurement.MLogArduinoInf;
+import sk.jazzman.brmi.domain.measurement.MLogNotSend;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamGetter;
 
 /**
  * JPA Action Handler
@@ -68,22 +70,55 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 		coreEventHandler = new CoreEventHandlerAbt() {
 			@Override
 			public void registerResolvers() {
-				register(CoreConfigurationHelper.EVENT_ARDUINO_TEMTERATURE_READ, new CoreEventResolverInf() {
+				register(CoreConfigurationHelper.EVENT_MLOG_READ, new CoreEventResolverInf() {
 					@Override
 					public void resolve(CoreEventInf event) throws Exception {
 						Map<String, Object> params = (Map<String, Object>) event.getParameters();
 
-						Object value = params.get("value");
+						Object value = ActionParamGetter.get("value", Object.class, params);
 
 						if (value instanceof MLogArduinoInf) {
+							MLogArduinoInf mlog;
 							try {
-								MLogArduinoInf mlog = (MLogArduinoInf) perform("PUT-mlog", new ParameterBuilder().setParameter("mlog", value).build()).get("mlog");
-								getSandbox().getCoreEventManager().fireEvent(
-										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT, new ParameterBuilder().setParameter("mlog", mlog).build(), JPAActionHandler.class));
+								mlog = (MLogArduinoInf) perform("PUT-mlog",//
+										new ActionParamBuilder().put("mlog", value).build()).get("mlog");
+
 							} catch (Exception ex) {
+								mlog = null;
 								getLogger().error("MLog - put unsucessful", ex);
 								getSandbox().getCoreEventManager().fireEvent(
-										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new ParameterBuilder().setParameter("mlog", value).build(), JPAActionHandler.class));
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT_UNSUCCESS, new ActionParamBuilder().put("mlog", value).build(), JPAActionHandler.class));
+							}
+
+							if (mlog != null) {
+								getSandbox().getCoreEventManager().fireEvent(
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOG_PUT, new ActionParamBuilder().put("mlog", mlog).build(), JPAActionHandler.class));
+							}
+						} else {
+							throw new IllegalStateException("Wrong object!");
+						}
+					}
+				});
+
+				register(CoreConfigurationHelper.EVENT_MLOG_SEND_UNSUCCESS, new CoreEventResolverInf() {
+
+					@Override
+					public void resolve(CoreEventInf event) throws Exception {
+						Map<String, Object> params = (Map<String, Object>) event.getParameters();
+
+						Object value = ActionParamGetter.get("value", Object.class, params);
+
+						if (value instanceof MLogArduinoInf) {
+							MLogNotSend ns = new MLogNotSend();
+							ns.setMlog(((MLogArduinoInf) value).getId());
+
+							try {
+								MLogNotSend mlogNS = (MLogNotSend) perform("PUT-mlog_not_send",//
+										new ActionParamBuilder().put("value", ns).build()).get("value");
+								getSandbox().getCoreEventManager().fireEvent(
+										new CoreEvent(CoreConfigurationHelper.EVENT_MLOGNOTSEND_PUT, new ActionParamBuilder().put("value", mlogNS).build(), JPAActionHandler.class));
+							} catch (Exception ex) {
+								getLogger().error("MLogNotSend - put unsucessful", ex);
 							}
 						} else {
 							throw new IllegalStateException("Wrong object!");
@@ -126,7 +161,7 @@ public class JPAActionHandler extends DefaultActionHandlerAbt<JPAActionInf> {
 				getLogger().info("Action '" + actionName + "' has been performed.");
 			} catch (Exception e) {
 				retVal = null;
-				getLogger().info("Action '" + actionName + "' has not been performed. Do rollback.", e);
+				getLogger().error("Action '" + actionName + "' has not been performed. Do rollback.", e);
 				session.getTransaction().rollback();
 			}
 		}

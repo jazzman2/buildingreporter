@@ -5,6 +5,8 @@ package sk.jazzman.brmi.common;
 
 import java.util.Map;
 
+import sk.jazzman.buildingreporter.domain.utils.ActionParamGetter;
+
 /**
  * @author jkovalci
  * 

@@ -1,20 +1,76 @@
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sk" lang="sk"
+	dir="ltr" xmlns:wicket="http://wicket.apache.org/">
 
 <style type="text/css">
 </style>
 
+<link rel="stylesheet" type="text/css"
+		href="css/smoothness/jquery-ui-1.10.3.custom.css" />
+
+
 <!-- Head -->
 <head>
-<title>[title]</title>
 
-<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
 
 </head>
 
-<!-- Body -->
 <body>
-	<wicket:child />
+	<!-- Head -->
+<!-- 	<wicket:head> -->
+<!-- 		<title wicket:id="pageTitle"></title> -->
+<!-- 	</wicket:head> -->
+
+
+
+
+	<table id="wrapper" class="layout-grid" cellspacing="0" cellpadding="0">
+
+		<htead>
+		<td width="20%"><div id="wrapper-header"
+				class="ui-widget-header ui-corner-all">
+				<h3>
+					<wicket:message key="br" />
+				</h3>
+			</div> <br /></td>
+		<td width="80%">
+			<h1>
+				<h1 wicket:id="heading">[heading text]</h1>
+				<br />
+			</h1>
+		</td>
+		</htead>
+
+		<tbody>
+			<tr>
+				<td class="top">
+					<!-- 						<div id="wrapper-menu" class="ui-widget" wicket:id="menu"> -->
+					<!-- 						</div> --> 
+					
+					<a href="#" wicket:id="aktualneTeploty">[AktualneTeploty]</a>
+					<br>
+					<a href="#" wicket:id="hodinaPriebeh">[PriebehZaHodinu]</a>
+					<br>
+					<a href="#" wicket:id="denPriebeh">[PriebehZaDen]</a>
+					<br>
+					<a href="#" wicket:id="tyzdenPriebeh">[PriebehZaTyzden]</a>
+					
+				</td>
+
+				<td>
+					<div id="wrapper-panel" class="ui-corner-all">
+						<wicket:child />
+					</div>
+				</td>
+			</tr>
+
+		</tbody>
+
+	</table>
+
 </body>
+
 
 </html>
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazzman.brmi.common;
+package sk.jazzman.buildingreporter.domain.utils;
 
 import java.util.HashMap;
 import java.util.Map;

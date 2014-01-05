@@ -50,5 +50,9 @@
 			<id>-1</id>
 			<bpart>-1</bpart>
 		</sensor>
+		<sensor>
+			<id>28:8B:46:1E:05:00:00:61</id>
+			<bpart>5</bpart>
+		</sensor>
 	</sensors>
 </croot>

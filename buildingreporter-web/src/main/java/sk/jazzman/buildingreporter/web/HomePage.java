@@ -3,8 +3,8 @@
  */
 package sk.jazzman.buildingreporter.web;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  * @author jano
@@ -21,14 +21,10 @@ public class HomePage extends PageAbt {
 	protected void construct() {
 		super.construct();
 
-		add(new AjaxFallbackLink<String>("link") {
-			/** serial id */
-			private static final long serialVersionUID = 1L;
+	}
 
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				setResponsePage(DashboardPage.class);
-			}
-		});
+	@Override
+	public IModel<String> newPageTitleModel() {
+		return Model.of("HomePage");
 	}
 }

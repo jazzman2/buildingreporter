@@ -12,6 +12,8 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
+import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
+
 /**
  * Parameter Builder
  * 

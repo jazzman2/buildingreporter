@@ -23,7 +23,7 @@ import sk.jazman.brmi.core.CoreConfigurationHelper;
 import sk.jazman.brmi.core.CoreEvent;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
-import sk.jazzman.brmi.common.ParameterBuilder;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
 
 /**
  * Arduino Action Handler Abstract
@@ -97,11 +97,13 @@ public class ArduinoActionHandler extends DefaultActionHandlerAbt<ArduinoActionI
 
 						getLogger().debug("Read from serial port  value " + inputLine);
 
-						getSandbox().getCoreEventManager().fireEvent(
-								new CoreEvent(CoreConfigurationHelper.EVENT_ARDUINO_TEMTERATURE_READ, new ParameterBuilder().setParameter("value", inputLine), ArduinoActionHandler.class));
+						getSandbox().getCoreEventManager().fireEvent(//
+								new CoreEvent(CoreConfigurationHelper.EVENT_ARDUINO_TEMTERATURE_READ, //
+										new ActionParamBuilder().put("value", inputLine).build(), //
+										ArduinoActionHandler.this));
 
 					} catch (Exception e) {
-						getLogger().error("Could not read data!");
+						getLogger().error("Could not read data!", e);
 					}
 				}
 			}
@@ -148,7 +150,7 @@ public class ArduinoActionHandler extends DefaultActionHandlerAbt<ArduinoActionI
 		if (portId == null) {
 			// getLogger().error("Could not find serial port.");
 			// return;
-			throw new IllegalStateException("Serial port does not exist!");
+			throw new IllegalStateException("Serial port " + portName + " does not exist!");
 
 		}
 

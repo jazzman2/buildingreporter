@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 
 import sk.jazzman.brmi.common.DefaultActionRegisterAbt;
 import sk.jazzman.brmi.server.ServerActionInf;
-import sk.jazzman.brmi.server.ws.action.PutMLog;
+import sk.jazzman.brmi.server.ws.action.SendMLog;
 import sk.jazzman.brmi.server.ws.action.RegisterMeasureInstrumnet;
 
 /**
@@ -32,6 +32,6 @@ public class WSActionRegister extends DefaultActionRegisterAbt<ServerActionInf> 
 	@Override
 	public void registerAll() throws Exception {
 		register(RegisterMeasureInstrumnet.getName(), new RegisterMeasureInstrumnet());
-		register(PutMLog.getName(), new PutMLog());
+		register(SendMLog.getName(), new SendMLog());
 	}
 }

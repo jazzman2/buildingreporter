@@ -9,6 +9,8 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import sk.jazzman.buildingreporter.domain.instrument.Instrument;
 import sk.jazzman.buildingreporter.domain.manager.SerializationManagerInf;
 import sk.jazzman.buildingreporter.domain.measurement.MLog;
 import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
+import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
 
 /**
  * {@link MLog} controller
@@ -37,7 +40,9 @@ public class LogController {
 
 	@RequestMapping(value = "/put", method = RequestMethod.PUT)
 	public @ResponseBody
-	String getRegister(@RequestBody String mlog) {
+	ResponseEntity<String> getRegister(@RequestBody String mlog) {
+
+		Long retVal;
 
 		if (mlog != null) {
 			logger.debug("Name " + mlog);
@@ -55,13 +60,17 @@ public class LogController {
 
 			logger.debug("Mlog Object: " + mlogObject.getValueMeasured());
 
-			putLog((MLog) mlogObject, mi);
+			retVal = putLog((MLog) mlogObject, mi);
 
 		} else {
+			retVal = null;
 			logger.error("Null object!");
 		}
 
-		return "registered";
+		return new ResponseEntity<String>(//
+				serialization.toByteArray(//
+						new ActionParamBuilder().put("mlog.id", retVal).build()), //
+				HttpStatus.CREATED);
 	}
 
 	/**
@@ -69,13 +78,30 @@ public class LogController {
 	 * 
 	 * @param log
 	 * @param instrument
+	 * 
+	 * @return id
 	 */
-	private void putLog(MLog log, Instrument instrument) {
+	private Long putLog(MLog log, Instrument instrument) {
 		if (log == null || instrument == null) {
 			throw new IllegalArgumentException("Null argument!");
 		}
 
+		Long id = log.getId();
+
+		if (id == null) {
+			id = MLog.getNextValSeq();
+			id = id * (-1);
+		} else {
+			id = (id * 1000) + instrument.getId();
+		}
+
+		log.setId(id);
+
 		log.setInstrument(instrument);
 		log.persist();
+
+		logger.info("Log: " + log.toString());
+
+		return log.getId();
 	}
 }
