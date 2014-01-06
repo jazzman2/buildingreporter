@@ -19,10 +19,10 @@ import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sk.jazman.brmi.core.CoreConfigurationHelper;
-import sk.jazman.brmi.core.CoreEvent;
 import sk.jazzman.brmi.application.SandboxInf;
 import sk.jazzman.brmi.common.DefaultActionHandlerAbt;
+import sk.jazzman.brmi.core.CoreConfigurationHelper;
+import sk.jazzman.brmi.core.CoreEvent;
 import sk.jazzman.buildingreporter.domain.utils.ActionParamBuilder;
 
 /**

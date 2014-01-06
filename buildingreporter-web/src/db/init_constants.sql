@@ -20,4 +20,11 @@ INSERT INTO bpart(id,name,type, parent) VALUES (3, 'Kotol 1',6,2);
 INSERT INTO bpart(id,name,type, parent) VALUES (4, 'Kotol Vstup',2,3);
 INSERT INTO bpart(id,name,type, parent) VALUES (5, 'Kotol Vystup',2,3);
 
+INSERT INTO bpart(id,name, type)VALUES (10, 'Blok A1',1);
+INSERT INTO bpart(id,name,type, parent) VALUES (11, 'Recepcia',5,10);
+INSERT INTO bpart(id,name,type, parent) VALUES (12, 'Radiator 1 vstup',3,11);
+INSERT INTO bpart(id,name,type, parent) VALUES (13, 'Radiator 1 vystup',3,11);
+INSERT INTO bpart(id,name,type, parent) VALUES (14, 'Okno recepcia',4,11);
+
+
 COMMIT;

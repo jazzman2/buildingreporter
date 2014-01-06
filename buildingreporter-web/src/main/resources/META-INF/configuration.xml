@@ -46,13 +46,40 @@
 	</aparameters>
 	
 	<sensors>
+		<!-- Nedefinovate -->
 		<sensor>
 			<id>-1</id>
 			<bpart>-1</bpart>
 		</sensor>
+		
+		<!-- Test -->
 		<sensor>
 			<id>28:8B:46:1E:05:00:00:61</id>
 			<bpart>5</bpart>
+		</sensor>
+		
+		<!-- Recepcia -->
+		<sensor>
+			<id>28:21:81:3C:05:00:00:F6</id>
+			<bpart>11</bpart>
+		</sensor>
+		
+		<!-- Radiator vstup -->
+		<sensor>
+			<id>28:79:86:3C:05:00:00:28</id>
+			<bpart>12</bpart>
+		</sensor>
+		
+		<!-- Radiator vystup -->
+		<sensor>
+			<id>28:06:96:3C:05:00:00:E8</id>
+			<bpart>13</bpart>
+		</sensor>
+		
+		<!-- Okno recepcia -->
+		<sensor>
+			<id>28:A7:71:3C:05:00:00:08</id>
+			<bpart>14</bpart>
 		</sensor>
 	</sensors>
 </croot>

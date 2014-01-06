@@ -103,7 +103,8 @@ public class ChartDayPage extends PageAbt {
 
 			Map<Long, List<MLog>> data = new TreeMap<Long, List<MLog>>();
 
-			Long[] items = new Long[] { Long.valueOf(-1), Long.valueOf(4), Long.valueOf(5) };
+			// FIXME:
+			Long[] items = new Long[] { Long.valueOf(11), Long.valueOf(12), Long.valueOf(13), Long.valueOf(14) };
 
 			for (Long itemId : items) {
 				data.put(itemId, MLog.createCriteria()//

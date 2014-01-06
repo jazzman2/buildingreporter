@@ -1,3 +1,5 @@
+--CREATE role br with  createdb createrole login password 'jahoda';
+
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;

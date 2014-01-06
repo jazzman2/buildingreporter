@@ -1,7 +1,7 @@
 /**
  * 
  */
-package sk.jazman.brmi.core;
+package sk.jazzman.brmi.core;
 
 import java.util.HashMap;
 import java.util.Map;

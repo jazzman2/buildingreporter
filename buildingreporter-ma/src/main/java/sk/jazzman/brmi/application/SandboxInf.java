@@ -2,9 +2,9 @@ package sk.jazzman.brmi.application;
 
 import org.apache.commons.configuration.Configuration;
 
-import sk.jazman.brmi.core.CoreEventManagerInf;
 import sk.jazzman.brmi.arduino.ArduinoActionInf;
 import sk.jazzman.brmi.common.ActionHandlerInf;
+import sk.jazzman.brmi.core.CoreEventManagerInf;
 import sk.jazzman.brmi.jpa.JPAActionInf;
 import sk.jazzman.brmi.server.ServerActionInf;
 

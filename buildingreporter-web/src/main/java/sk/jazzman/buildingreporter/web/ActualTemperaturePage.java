@@ -82,8 +82,11 @@ public class ActualTemperaturePage extends PageAbt {
 			List<MLog> data = new ArrayList<MLog>();
 			MLog l;
 
+			// FIXME:
+			Long[] items = new Long[] { Long.valueOf(11), Long.valueOf(12), Long.valueOf(13), Long.valueOf(14) };
+
 			// FIXME: do konfiguracie presunut co zobrazovat
-			for (Long itemId : new Long[] { Long.valueOf(-1), Long.valueOf(4), Long.valueOf(5) }) {
+			for (Long itemId : items) {
 				l = (MLog) MLog.createCriteria()//
 						.add(Restrictions.eq("item.id", itemId))//
 						.addOrder(Order.desc("logDate"))//
