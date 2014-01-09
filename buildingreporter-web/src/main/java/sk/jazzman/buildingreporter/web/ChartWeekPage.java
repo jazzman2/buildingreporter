@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
@@ -23,6 +21,8 @@ import org.joda.time.DateTime;
 
 import sk.jazzman.buildingreporter.domain.building.BPart;
 import sk.jazzman.buildingreporter.domain.measurement.MLog;
+import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
+import sk.jazzman.buildingreporter.domain.measurement.MLogUtils;
 
 import com.googlecode.wickedcharts.highcharts.options.Axis;
 import com.googlecode.wickedcharts.highcharts.options.AxisType;
@@ -101,7 +101,7 @@ public class ChartWeekPage extends PageAbt {
 			DateTime dt = new DateTime(System.currentTimeMillis());
 			dt = dt.minusWeeks(1);
 
-			Map<Long, List<MLog>> data = new TreeMap<Long, List<MLog>>();
+			Map<Long, List<MLogInf>> data = new TreeMap<Long, List<MLogInf>>();
 
 			// FIXME:
 			Long[] items = new Long[] { Long.valueOf(11), Long.valueOf(12), Long.valueOf(13), Long.valueOf(14) };
@@ -124,7 +124,7 @@ public class ChartWeekPage extends PageAbt {
 						temperature.put(itemId, tList);
 					}
 
-					calcutateTemperature(index, h, step, data.get(itemId), tList);
+					MLogUtils.calcutateAverageHours(h, step, data.get(itemId), tList);
 				}
 
 				h = h.plusHours(step);
@@ -166,58 +166,5 @@ public class ChartWeekPage extends PageAbt {
 			return new Chart("chart", options);
 		}
 
-		/**
-		 * Calculate temperature
-		 * 
-		 * @param index
-		 * @param minute
-		 * @param data
-		 * @param temperature
-		 */
-		private void calcutateTemperature(int index, DateTime hour, int step, List<MLog> data, List<Number> temperature) {
-			if (temperature == null) {
-				throw new IllegalArgumentException("Null argument!");
-			}
-
-			Double avg;
-
-			if (CollectionUtils.isNotEmpty(data)) {
-
-				final long min = hour.getMillis();
-				final long max = hour.plusHours(step).getMillis();
-
-				List<MLog> filtered = (List<MLog>) CollectionUtils.select(data, new Predicate() {
-
-					@Override
-					public boolean evaluate(Object arg0) {
-						long d = ((MLog) arg0).getLogDate().getTime();
-
-						return d >= min && d < max;
-					}
-				});
-
-				if (CollectionUtils.isNotEmpty(filtered)) {
-					int count = 0;
-					Double sum = Double.valueOf(0);
-
-					for (MLog l : filtered) {
-						sum += l.getValueMeasured();
-						count++;
-					}
-
-					avg = sum / count;
-				} else {
-					avg = null;
-				}
-			} else {
-				avg = null;
-			}
-
-			if (avg == null) {
-				avg = Double.valueOf(0d);
-			}
-
-			temperature.add(avg);
-		}
 	}
 }
