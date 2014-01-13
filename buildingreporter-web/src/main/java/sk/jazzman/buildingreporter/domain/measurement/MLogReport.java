@@ -22,7 +22,6 @@ import org.hibernate.annotations.PolymorphismType;
 import org.hibernate.annotations.Subselect;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.roo.addon.jpa.entity.RooJpaEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -30,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  */
 // @RooJavaBean
-@RooJpaEntity
+// @RooJpaEntity
 // @BatchSize(size = 1000)
 @Polymorphism(type = PolymorphismType.EXPLICIT)
 @Transactional(readOnly = true)

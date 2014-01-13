@@ -1,7 +1,10 @@
 package sk.jazzman.buildingreporter.domain.measurement;
 
+import java.lang.reflect.Constructor;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -19,7 +22,10 @@ import org.hibernate.Session;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
+import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
@@ -72,10 +78,25 @@ public class MLog implements MLogInf {
 	@ManyToOne
 	private BPart item;
 
+	/**
+	 * {@link Constructor}
+	 */
 	public MLog() {
 
 	}
 
+	/**
+	 * {@link Constructor}
+	 * 
+	 * @param id
+	 * @param valueMeasured
+	 * @param valueTransformed
+	 * @param logDate
+	 * @param unitMeasured
+	 * @param unitTransformed
+	 * @param instrument
+	 * @param item
+	 */
 	public MLog(Long id, Double valueMeasured, Double valueTransformed, Date logDate, MUnit unitMeasured, MUnit unitTransformed, Instrument instrument, BPart item) {
 		this.id = id;
 		this.valueMeasured = valueMeasured;
@@ -100,6 +121,16 @@ public class MLog implements MLogInf {
 		Query q = entityManager().unwrap(Session.class).createSQLQuery("select MYSEQ.nextval as num from dual").addScalar("num", StandardBasicTypes.BIG_INTEGER);
 
 		return ((BigInteger) q.uniqueResult()).longValue();
+	}
 
+	public static List<MLog> findLogsForHour(Date date, Long itemId) {
+		return MLog.createCriteria()//
+				.add(Restrictions.eq("item.id", itemId))//
+				// .add(Restrictions.eq("item", itemId))//
+				.addOrder(Order.asc("logDate"))//
+				.add(Restrictions.ge("logDate", new Timestamp(date.getTime())))//
+				.add(Restrictions.le("logDate", new Timestamp(new DateTime(date).plusHours(1).getMillis())))
+				// .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)//
+				.list();
 	}
 }

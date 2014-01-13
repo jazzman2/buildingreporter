@@ -3,6 +3,7 @@
  */
 package sk.jazzman.buildingreporter.domain.measurement;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -11,14 +12,11 @@ import org.joda.time.DateTime;
 import org.joda.time.Hours;
 
 /**
- * {@link MLogInf} utilities
- * 
- * @author jkovalci
+ * @author jano
  * 
  */
-public final class MLogUtils {
-
-	private MLogUtils() {
+public class MLogUtils2 {
+	private MLogUtils2() {
 
 	}
 
@@ -33,7 +31,7 @@ public final class MLogUtils {
 	 * @param data
 	 * @param temperature
 	 */
-	public static List<Number> calcutateAverageHours(DateTime start, DateTime stop, int stepHour, List<MLogInf> data) {
+	public static List<Number> calcutateAverageHours(DateTime start, DateTime stop, int stepHour, Long itemId) {
 
 		double avg;
 		double avgSum;
@@ -44,17 +42,23 @@ public final class MLogUtils {
 		long min;
 		long max;
 
-		ListIterator<MLogInf> iterator = data.listIterator();
+		// ListIterator<MLogInf> iterator = data.listIterator();
 
-		MLogInf log;
+		MLog log;
 		long logDate;
 		double logValue;
 
 		List<Number> temperature = new ArrayList<Number>(intervalSize);
+		List<MLog> data;
 
 		for (int index = 0; index < intervalSize; index++) {
+
 			min = start.plusHours(index * stepHour).getMillis();
 			max = start.plusHours((index + 1) * stepHour).getMillis();
+
+			data = MLog.findLogsForHour(new Timestamp(min), itemId);
+
+			ListIterator<MLog> iterator = data.listIterator();
 
 			avg = 0d;
 			avgCount = 0;
@@ -87,5 +91,9 @@ public final class MLogUtils {
 
 		return temperature;
 	}
-
+	// public interface LogReader {
+	// public Criteria getCriteria();
+	//
+	// public List<MLogInf> getData();
+	// }
 }
