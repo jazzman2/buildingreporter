@@ -6,21 +6,21 @@ package sk.jazzman.buildingreporter.domain.measurement;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Version;
-import sk.jazzman.buildingreporter.domain.measurement.MLog;
+import sk.jazzman.buildingreporter.domain.measurement.MLogReport;
 
-privileged aspect MLog_Roo_Jpa_Entity {
+privileged aspect MLogReport_Roo_Jpa_Entity {
     
-    declare @type: MLog: @Entity;
+    declare @type: MLogReport: @Entity;
     
     @Version
     @Column(name = "version")
-    private Integer MLog.version;
+    private Integer MLogReport.version;
     
-    public Integer MLog.getVersion() {
+    public Integer MLogReport.getVersion() {
         return this.version;
     }
     
-    public void MLog.setVersion(Integer version) {
+    public void MLogReport.setVersion(Integer version) {
         this.version = version;
     }
     

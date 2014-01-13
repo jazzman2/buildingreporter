@@ -5,7 +5,6 @@ package sk.jazzman.buildingreporter.web;
 
 import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +17,13 @@ import org.apache.wicket.model.Model;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.joda.time.Seconds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sk.jazzman.buildingreporter.domain.building.BPart;
-import sk.jazzman.buildingreporter.domain.measurement.MLog;
 import sk.jazzman.buildingreporter.domain.measurement.MLogInf;
+import sk.jazzman.buildingreporter.domain.measurement.MLogReport;
 import sk.jazzman.buildingreporter.domain.measurement.MLogUtils;
 
 import com.googlecode.wickedcharts.highcharts.options.Axis;
@@ -43,6 +45,8 @@ import com.googlecode.wickedcharts.wicket6.highcharts.Chart;
  * 
  */
 public class ChartWeekPage extends PageAbt {
+
+	private static final Logger log = LoggerFactory.getLogger(ChartWeekPage.class);
 
 	/**
 	 * 
@@ -93,41 +97,49 @@ public class ChartWeekPage extends PageAbt {
 			Options options = new Options();
 			options.setTitle(new Title("Priebeh"));
 
-			int size = 7 * 24;
 			int step = 1;
 
 			Map<Long, List<Number>> temperature = new TreeMap<Long, List<Number>>();
 
-			DateTime dt = new DateTime(System.currentTimeMillis());
-			dt = dt.minusWeeks(1);
+			DateTime stop = new DateTime(System.currentTimeMillis());
+			DateTime start = stop.minusWeeks(1);
 
 			Map<Long, List<MLogInf>> data = new TreeMap<Long, List<MLogInf>>();
 
 			// FIXME:
 			Long[] items = new Long[] { Long.valueOf(11), Long.valueOf(12), Long.valueOf(13), Long.valueOf(14) };
 
+			Long startPerform;
+			Long stopPerform;
+
 			for (Long itemId : items) {
-				data.put(itemId, MLog.createCriteria()//
-						.add(Restrictions.eq("item.id", itemId))//
-						.addOrder(Order.desc("logDate"))//
-						.add(Restrictions.ge("logDate", new Timestamp(dt.getMillis()))).list());
+				startPerform = System.currentTimeMillis();
+
+				log.info("Start loading data...");
+
+				List<MLogInf> dataList = MLogReport.createCriteria()//
+						// .add(Restrictions.eq("item.id", itemId))//
+						.add(Restrictions.eq("item", itemId))//
+						.addOrder(Order.asc("logDate"))//
+						.add(Restrictions.ge("logDate", new Timestamp(start.getMillis())))//
+						// .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)//
+						.list();
+
+				data.put(itemId, dataList);
+
+				stopPerform = System.currentTimeMillis();
+
+				log.info("Load duration=" + Seconds.secondsBetween(new DateTime(startPerform), new DateTime(stopPerform)).getSeconds() + " size=" + dataList.size());
 			}
 
-			DateTime h = new DateTime(dt);
-			List<Number> tList;
-			for (int index = 0; index < size; index++) {
+			for (Long itemId : items) {
+				startPerform = System.currentTimeMillis();
 
-				for (Long itemId : items) {
-					tList = temperature.get(itemId);
-					if (tList == null) {
-						tList = new ArrayList<Number>(size);
-						temperature.put(itemId, tList);
-					}
+				log.info("Start calculating data...");
+				temperature.put(itemId, MLogUtils.calcutateAverageHours(start, stop, step, data.get(itemId)));
 
-					MLogUtils.calcutateAverageHours(h, step, data.get(itemId), tList);
-				}
-
-				h = h.plusHours(step);
+				stopPerform = System.currentTimeMillis();
+				log.info("Claculate duration=" + Seconds.secondsBetween(new DateTime(startPerform), new DateTime(stopPerform)).getSeconds() + " size=" + data.get(itemId).size());
 			}
 
 			Series<Number> s;
@@ -138,7 +150,7 @@ public class ChartWeekPage extends PageAbt {
 				s.setName(BPart.findBPart(e.getKey()).getName());
 
 				s.setPointInterval(3600000);
-				s.setPointStart(dt.getMillis());
+				s.setPointStart(start.getMillis());
 				options.addSeries(s);
 			}
 
@@ -165,6 +177,5 @@ public class ChartWeekPage extends PageAbt {
 
 			return new Chart("chart", options);
 		}
-
 	}
 }

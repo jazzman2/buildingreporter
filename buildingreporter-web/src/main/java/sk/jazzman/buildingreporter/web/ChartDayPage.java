@@ -5,7 +5,6 @@ package sk.jazzman.buildingreporter.web;
 
 import java.lang.reflect.Constructor;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,14 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.joda.time.Seconds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sk.jazzman.buildingreporter.domain.building.BPart;
 import sk.jazzman.buildingreporter.domain.measurement.MLog;
@@ -43,6 +47,8 @@ import com.googlecode.wickedcharts.wicket6.highcharts.Chart;
  * 
  */
 public class ChartDayPage extends PageAbt {
+
+	private static final Logger log = LoggerFactory.getLogger(ChartWeekPage.class);
 
 	/**
 	 * 
@@ -98,36 +104,50 @@ public class ChartDayPage extends PageAbt {
 
 			Map<Long, List<Number>> temperature = new TreeMap<Long, List<Number>>();
 
-			DateTime dt = new DateTime(System.currentTimeMillis());
-			dt = dt.minusDays(1);
+			DateTime stop = new DateTime(System.currentTimeMillis());
+			DateTime start = stop.minusDays(1);
 
 			Map<Long, List<MLogInf>> data = new TreeMap<Long, List<MLogInf>>();
 
 			// FIXME:
 			Long[] items = new Long[] { Long.valueOf(11), Long.valueOf(12), Long.valueOf(13), Long.valueOf(14) };
 
+			Long startPerform;
+			Long stopPerform;
+
+			List<MLogInf> dataList;
+
 			for (Long itemId : items) {
-				data.put(itemId, MLog.createCriteria()//
+
+				startPerform = System.currentTimeMillis();
+
+				log.info("Start loading data...");
+
+				dataList = MLog.createCriteria()//
 						.add(Restrictions.eq("item.id", itemId))//
-						.addOrder(Order.desc("logDate"))//
-						.add(Restrictions.ge("logDate", new Timestamp(dt.getMillis()))).list());
+						.addOrder(Order.asc("logDate"))//
+						.add(Restrictions.ge("logDate", new Timestamp(start.getMillis())))//
+						.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)//
+						.setFlushMode(FlushMode.COMMIT)//
+						.setCacheable(false) //
+						.list();
+
+				data.put(itemId, dataList);
+
+				stopPerform = System.currentTimeMillis();
+
+				log.info("Load duration=" + Seconds.secondsBetween(new DateTime(startPerform), new DateTime(stopPerform)).getSeconds() + " size=" + dataList.size());
 			}
 
-			DateTime h = new DateTime(dt);
-			List<Number> tList;
-			for (int index = 0; index < size; index++) {
+			for (Long itemId : items) {
+				startPerform = System.currentTimeMillis();
 
-				for (Long itemId : items) {
-					tList = temperature.get(itemId);
-					if (tList == null) {
-						tList = new ArrayList<Number>(size);
-						temperature.put(itemId, tList);
-					}
+				log.info("Start calculating data...");
 
-					MLogUtils.calcutateAverageHours(h, step, data.get(itemId), tList);
-				}
+				temperature.put(itemId, MLogUtils.calcutateAverageHours(start, stop, step, data.get(itemId)));
 
-				h = h.plusHours(step);
+				stopPerform = System.currentTimeMillis();
+				log.info("Claculate duration=" + Seconds.secondsBetween(new DateTime(startPerform), new DateTime(stopPerform)).getSeconds() + " size=" + data.get(itemId).size());
 			}
 
 			Series<Number> s;
@@ -138,7 +158,7 @@ public class ChartDayPage extends PageAbt {
 				s.setName(BPart.findBPart(e.getKey()).getName());
 				s.setPointInterval(3600000);
 
-				s.setPointStart(dt.getMillis());
+				s.setPointStart(start.getMillis());
 				options.addSeries(s);
 			}
 

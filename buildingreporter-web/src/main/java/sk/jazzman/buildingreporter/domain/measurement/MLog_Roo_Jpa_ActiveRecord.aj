@@ -28,9 +28,9 @@ privileged aspect MLog_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM MLog o", MLog.class).getResultList();
     }
     
-    public static MLog MLog.findMLog(Long id_) {
-        if (id_ == null) return null;
-        return entityManager().find(MLog.class, id_);
+    public static MLog MLog.findMLog(Long id) {
+        if (id == null) return null;
+        return entityManager().find(MLog.class, id);
     }
     
     public static List<MLog> MLog.findMLogEntries(int firstResult, int maxResults) {
@@ -49,7 +49,7 @@ privileged aspect MLog_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            MLog attached = MLog.findMLog(this.id_);
+            MLog attached = MLog.findMLog(this.id);
             this.entityManager.remove(attached);
         }
     }

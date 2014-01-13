@@ -109,7 +109,7 @@ public class ChartHourPage extends PageAbt {
 			for (Long itemId : items) {
 				data.put(itemId, MLog.createCriteria()//
 						.add(Restrictions.eq("item.id", itemId))//
-						.addOrder(Order.desc("logDate"))//
+						.addOrder(Order.asc("logDate"))//
 						.add(Restrictions.ge("logDate", new Timestamp(dt.getMillis()))).list());
 			}
 

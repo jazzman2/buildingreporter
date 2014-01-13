@@ -5,9 +5,10 @@ package sk.jazzman.buildingreporter.domain.measurement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Hours;
 
 /**
  * {@link MLogInf} utilities
@@ -16,6 +17,7 @@ import org.joda.time.DateTime;
  * 
  */
 public final class MLogUtils {
+
 	private MLogUtils() {
 
 	}
@@ -23,58 +25,69 @@ public final class MLogUtils {
 	/**
 	 * Calculate average temperature in hours
 	 * 
-	 * @param index
-	 * @param minute
+	 * Musia byt data zotriedene podla datumu!!!
+	 * 
+	 * @param start
+	 * @param stop
+	 * @param stepHour
 	 * @param data
 	 * @param temperature
 	 */
-	public static void calcutateAverageHours(DateTime hour, int step, List<MLogInf> data, List<Number> temperature) {
-		if (temperature == null) {
-			throw new IllegalArgumentException("Null argument!");
-		}
+	public static List<Number> calcutateAverageHours(DateTime start, DateTime stop, int stepHour, List<MLogInf> data) {
 
-		Double avg;
+		double avg;
+		double avgSum;
+		int avgCount;
 
-		if (CollectionUtils.isNotEmpty(data)) {
+		int intervalSize = Hours.hoursBetween(start, stop).getHours();
 
-			final long min = hour.getMillis();
-			final long max = hour.plusHours(step).getMillis();
+		long min;
+		long max;
 
-			List<MLogInf> filtered = new ArrayList<MLogInf>();
+		ListIterator<MLogInf> iterator = data.listIterator();
 
-			for (MLogInf l : data) {
-				long d = l.getLogDate().getTime();
+		MLogInf log;
+		long logDate;
+		double logValue;
 
-				if (d < min) {
+		List<Number> temperature = new ArrayList<Number>(intervalSize);
+
+		for (int index = 0; index < intervalSize; index++) {
+
+			System.out.println("Index" + index);
+
+			min = start.plusHours(index * stepHour).getMillis();
+			max = start.plusHours((index + 1) * stepHour).getMillis();
+
+			avg = 0d;
+			avgCount = 0;
+			avgSum = 0d;
+
+			while (iterator.hasNext()) {
+				log = iterator.next();
+				logDate = log.getLogDate().getTime();
+				logValue = log.getValueMeasured();
+
+				if (logDate < min) {
 					continue;
-				} else if (d > max) {
+				} else if (logDate > max) {
+					iterator.previous();
 					break;
 				} else {
-					filtered.add(l);
+					avgCount++;
+					avgSum += logValue;
 				}
 			}
 
-			if (CollectionUtils.isNotEmpty(filtered)) {
-				int count = 0;
-				double sum = 0d;
-
-				for (MLogInf l : filtered) {
-					sum += l.getValueMeasured();
-					count++;
-				}
-
-				avg = sum / count;
+			if (avgCount > 0) {
+				avg = avgSum / avgCount;
 			} else {
-				avg = null;
+				avg = 0;
 			}
-		} else {
-			avg = null;
+
+			temperature.add(Double.valueOf(avg));
 		}
 
-		if (avg == null) {
-			avg = Double.valueOf(0d);
-		}
-
-		temperature.add(avg);
+		return temperature;
 	}
 }
