@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.joda.time.DateTime;
-import org.joda.time.Hours;
-
 /**
  * {@link MLogInf} utilities
  * 
- * @author jkovalci
+ * @author jkovalcik
  * 
  */
 public final class MLogUtils {
@@ -33,7 +30,7 @@ public final class MLogUtils {
 	 * @param data
 	 * @param temperature
 	 */
-	public static List<Number> calcutateAverageHours(DateTime start, DateTime stop, int stepHour, List<MLogInf> data) {
+	public static List<Number> calcutateAverageHours(LocalDateTime start, DateTime stop, int stepHour, List<MLogInf> data) {
 
 		double avg;
 		double avgSum;

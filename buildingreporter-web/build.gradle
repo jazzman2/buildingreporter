@@ -1,0 +1,7 @@
+description 'Web Interface of Measuremet Processes'
+
+dependencies {
+    testCompile group:'junit', name:'junit', version:"${jUnitVersion}"
+
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+}

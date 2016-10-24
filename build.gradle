@@ -1,0 +1,43 @@
+apply plugin: 'nebula.nebula-release'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:nebula-release-plugin:4.1.0'
+    }
+}
+
+allprojects{
+    group = "sk.jazzman.${rootProject}"
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    buildDir='target'
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src/main/java']
+            }
+            resources {
+                srcDirs = ['src/main/resources']
+            }
+        }
+    }
+
+
+    jar {
+        manifest {
+            attributes("Implementation-Title": "Gradle",
+                    "Implementation-Version": version)
+        }
+    }
+}
