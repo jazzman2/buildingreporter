@@ -1,7 +1,16 @@
 description 'Web Interface of Measuremet Processes'
 
-dependencies {
-    testCompile group:'junit', name:'junit', version:"${jUnitVersion}"
 
+configurations {
+//    all*.exclude module: 'liquibase-core'
+    all*.exclude module: 'spring-boot-starter-logging'
+    all*.exclude module: 'spring-boot-starter-tomcat'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: "${jUnitVersion}"
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
+    
+    compile project(':buildingreporter-domain')
 }

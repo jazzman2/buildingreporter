@@ -1,33 +1,33 @@
 /**
- * 
+ *
  */
 package sk.jazzman.brmi.server;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration2.Configuration;
 
 /**
  * @author jano
- * 
  */
 public final class ServerConfigurationHelper {
-
+	
 	/**
 	 * Get Server url from configuration
-	 * 
+	 *
 	 * @param configuration
+	 *
 	 * @return
 	 */
 	public static final String getServerURL(Configuration configuration) {
-		if (configuration == null) {
+		if(configuration == null) {
 			throw new IllegalArgumentException("Null argument!");
 		}
-
+		
 		String retVal = configuration.getString("server/url", null);
-
-		if (retVal == null) {
+		
+		if(retVal == null) {
 			throw new IllegalStateException("Null value!");
 		}
-
+		
 		return retVal;
 	}
 }

@@ -3,6 +3,7 @@ apply plugin: 'nebula.nebula-release'
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -10,7 +11,7 @@ buildscript {
     }
 }
 
-allprojects{
+allprojects {
     group = "sk.jazzman.${rootProject}"
 }
 
@@ -20,7 +21,7 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    buildDir='target'
+    buildDir = 'target'
 
     sourceSets {
         main {
@@ -40,4 +41,10 @@ subprojects {
                     "Implementation-Version": version)
         }
     }
+
+    repositories {
+//        mavenLocal()
+        mavenCentral()
+    }
+
 }

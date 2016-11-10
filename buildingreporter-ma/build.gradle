@@ -1,0 +1,19 @@
+description 'Measuremet Adpter'
+
+dependencies {
+    compile project(':buildingreporter-domain')
+
+    compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: "${hibernateVersion}"
+
+    compile group: 'org.apache.commons', name: 'commons-configuration2', version: "${commonConfigurationVersion}"
+    compile group: 'org.rxtx', name: 'rxtx', version: "${rxTxVersion}"
+    compile group: 'org.rxtx', name: 'rxtxcomm', version: "${rxTxCommVersion}"
+    compile group: 'com.sun.jersey', name: 'jersey-client', version: "${jerseyVersion}"
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: "${xmlStreamVersion}"
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${slf4jVersion}"
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4jVersion}"
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
+
+}
