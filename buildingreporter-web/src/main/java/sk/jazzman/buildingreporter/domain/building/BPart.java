@@ -3,6 +3,7 @@ package sk.jazzman.buildingreporter.domain.building;
 import sk.jazzman.buildingreporter.domain.BREntityInf;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Size;
 //@RooToString
 //@RooJpaActiveRecord
 //@SequenceGenerator(name = "SEQ", sequenceName = "bpart_seq")
+@Entity
 public class BPart implements BREntityInf {
 	
 	/**
@@ -45,4 +47,14 @@ public class BPart implements BREntityInf {
 	@NotNull
 	@ManyToOne
 	private BType type;
+	
+	@Override
+	public Long getId() {
+		return id;
+	}
+	
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

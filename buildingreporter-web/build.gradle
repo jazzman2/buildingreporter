@@ -9,8 +9,17 @@ configurations {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: "${jUnitVersion}"
+
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.data:spring-data-commons:${springDataCommonsVersion}")
+    compile("org.springframework.data:spring-data-jpa:${springDataJpaVersion}")
+    compile("org.springframework.data:spring-data-rest-core:${springDataRestVersion}")
+
     compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
-    
+
+    compile("org.apache.wicket:wicket-core:${wicketVersion}")
+    compile("org.apache.wicket:wicket-spring:${wicketVersion}")
+    compile("com.googlecode.wicked-charts:wicked-charts-wicket7:${wicketChartsVersion}")
+
     compile project(':buildingreporter-domain')
 }
