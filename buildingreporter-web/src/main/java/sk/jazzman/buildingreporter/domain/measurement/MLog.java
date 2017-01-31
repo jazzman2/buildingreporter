@@ -18,7 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Constructor;
-import java.util.Date;
+import java.sql.Timestamp;
 
 //@RooJavaBean
 //@RooToString
@@ -46,7 +46,7 @@ public class MLog implements MLogInf {
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(style = "M-")
-	private Date logDate;
+	private Timestamp logDate;
 	
 	@ManyToOne
 	private MUnit unitTransformed;
@@ -82,7 +82,7 @@ public class MLog implements MLogInf {
 	 * @param instrument
 	 * @param item
 	 */
-	public MLog(Long id, Double valueMeasured, Double valueTransformed, Date logDate, MUnit unitMeasured, MUnit unitTransformed, Instrument instrument, BPart item) {
+	public MLog(Long id, Double valueMeasured, Double valueTransformed, Timestamp logDate, MUnit unitMeasured, MUnit unitTransformed, Instrument instrument, BPart item) {
 		this.id = id;
 		this.valueMeasured = valueMeasured;
 		this.valueTransformed = valueTransformed;
@@ -152,12 +152,12 @@ public class MLog implements MLogInf {
 	}
 	
 	@Override
-	public Date getLogDate() {
+	public Timestamp getLogDate() {
 		return logDate;
 	}
 	
 	@Override
-	public void setLogDate(Date logDate) {
+	public void setLogDate(Timestamp logDate) {
 		this.logDate = logDate;
 	}
 }
