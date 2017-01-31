@@ -17,9 +17,13 @@ dependencies {
 
     compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
 
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "${jacksonVersion}"
+
     compile("org.apache.wicket:wicket-core:${wicketVersion}")
     compile("org.apache.wicket:wicket-spring:${wicketVersion}")
     compile("com.googlecode.wicked-charts:wicked-charts-wicket7:${wicketChartsVersion}")
 
     compile project(':buildingreporter-domain')
+
+
 }
