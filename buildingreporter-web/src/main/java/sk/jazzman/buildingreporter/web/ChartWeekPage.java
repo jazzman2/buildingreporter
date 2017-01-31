@@ -20,11 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sk.jazzman.buildingreporter.domain.building.BPart;
 import sk.jazzman.buildingreporter.domain.measurement.MLogUtils2;
+import sk.jazzman.buildingreporter.repository.measurement.MLogRepository;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
@@ -39,6 +39,9 @@ import java.util.TreeMap;
 public class ChartWeekPage extends PageAbt {
 	
 	private static final Logger log = LoggerFactory.getLogger(ChartWeekPage.class);
+	
+	@Autowired
+	private MLogRepository;
 	
 	/**
 	 *
@@ -95,48 +98,22 @@ public class ChartWeekPage extends PageAbt {
 			LocalDateTime stop = LocalDateTime.now();
 			LocalDateTime start = stop.minusWeeks(1);
 			
-			// Map<Long, List<MLogInf>> data = new TreeMap<Long,
-			// List<MLogInf>>();
-			
 			// FIXME:
 			Long[] items = new Long[] { Long.valueOf(11), Long.valueOf(12), Long.valueOf(13), Long.valueOf(14) };
 			
-			Long startPerform;
-			Long stopPerform;
-			
-			// for (Long itemId : items) {
-			// startPerform = System.currentTimeMillis();
-			//
-			// log.info("Start loading data...");
-			//
-			//
-			//
-			// data.put(itemId, dataList);
-			//
-			// stopPerform = System.currentTimeMillis();
-			//
-			// log.info("Load duration=" + Seconds.secondsBetween(new
-			// DateTime(startPerform), new DateTime(stopPerform)).getSeconds() +
-			// " size=" + dataList.size());
-			// }
+			LocalDateTime startPerform;
+			LocalDateTime stopPerform;
 			
 			for(Long itemId : items) {
-				startPerform = System.currentTimeMillis();
+				startPerform = LocalDateTime.now();
 				
 				log.info("Start calculating data...");
-				// temperature.put(itemId,
-				// MLogUtils.calcutateAverageHours(start, stop, step,
-				// data.get(itemId)));
 				
 				temperature.put(itemId, MLogUtils2.calcutateAverageHours(start, stop, step, itemId));
 				
-				stopPerform = System.currentTimeMillis();
-				// log.info("Claculate duration=" + Seconds.secondsBetween(new
-				// DateTime(startPerform), new
-				// DateTime(stopPerform)).getSeconds() + " size=" +
-				// data.get(itemId).size());
+				stopPerform = LocalDateTime.now();
 				
-				log.info("Claculate duration=" + Seconds.secondsBetween(new LocalDateTime(startPerform), new LocalDateTime(stopPerform)).getSeconds());
+				log.info("Claculate duration=" + java.time.Duration.between(startPerform, stopPerform).getSeconds());
 			}
 			
 			Series<Number> s;
