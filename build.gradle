@@ -1,4 +1,5 @@
 apply plugin: 'nebula.nebula-release'
+apply plugin: 'maven'
 
 buildscript {
     repositories {
@@ -8,6 +9,7 @@ buildscript {
 
     dependencies {
         classpath 'com.netflix.nebula:nebula-release-plugin:4.1.0'
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
@@ -15,7 +17,12 @@ allprojects {
     group = "sk.jazzman.${rootProject}"
 }
 
+ext {
+    userBuild = "$System.env.USER"
+}
+
 subprojects {
+    apply plugin: 'maven'
     apply plugin: 'java'
 
     sourceCompatibility = 1.8
@@ -43,8 +50,20 @@ subprojects {
     }
 
     repositories {
-//        mavenLocal()
+        mavenLocal()
         mavenCentral()
+        maven { url "http://repo.spring.io/release" }
     }
 
+    jar {
+        manifest {
+            attributes("Build-tool": "Gradle",
+                    "Built-Gradle": gradle.gradleVersion,
+                    "Version": version,
+                    "Built-by": userBuild,
+                    "Built-JDK": System.getProperty('java.version'),
+                    "Built-Date": new Date(),
+            )
+        }
+    }
 }
