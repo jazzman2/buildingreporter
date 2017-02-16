@@ -2,8 +2,11 @@ rootProject.name='buildingreporter'
 
 include 'buildingreporter-domain'
 include 'buildingreporter-ma'
-include 'buildingreporter-web'
+include 'buildingreporter-mlogger-service'
+//include 'buildingreporter-web'
 
 //project("$rootProject/buildingreporter-domain").name = 'buildingreporter-domain'
 //project(":$rootProject/buildingreporter-ma").name = 'buildingreporter-ma'
 //project(":$rootProject/buildingreporter-web").name = 'buildingreporter-web'
+
+
