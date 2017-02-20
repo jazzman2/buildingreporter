@@ -3,9 +3,6 @@
  */
 package sk.jazzman.brmi.domain.measurement;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
-import com.thoughtworks.xstream.converters.extended.SqlTimestampConverter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
@@ -15,7 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.Date;
+import java.sql.Timestamp;
+
 
 /**
  * Measured Log
@@ -25,7 +23,6 @@ import java.util.Date;
 @Entity
 @Table(name = "mlog")
 @SequenceGenerator(name = "SEQ", sequenceName = "log_seq")
-@XStreamAlias("mlog")
 public class MLog extends MAEntityAbt implements MLogArduinoInf {
 	/** serial id */
 	private static final long serialVersionUID = 1L;
@@ -45,35 +42,27 @@ public class MLog extends MAEntityAbt implements MLogArduinoInf {
 		this.id = id;
 	}
 	
-	@XStreamAlias("valueMeasured")
 	@Column(name = "value_measured")
 	private Double valueMeasured;
 	
-	@XStreamAlias("valueTransformed")
 	@Column(name = "value_transformed")
 	private Double valueTransformed;
 	
-	@XStreamAlias("logDate")
-	@XStreamConverter(SqlTimestampConverter.class)
 	@Column(name = "log_date", nullable = false)
-	private java.util.Date logDate;
+	private Timestamp logDate;
 	
-	@XStreamAlias("instrumentName")
 	@Column(name = "instrument_name", nullable = false, columnDefinition = "TEXT")
 	@Length(max = 50)
 	private String instrumentName;
 	
-	@XStreamAlias("unitMeasured")
 	@Column(name = "unit_measured", nullable = false, columnDefinition = "TEXT")
 	@Length(max = 50)
 	private String unitMeasured;
 	
-	@XStreamAlias("unitTransformed")
 	@Column(name = "unit_transformed", columnDefinition = "TEXT")
 	@Length(max = 50)
 	private String unitTransformed;
 	
-	@XStreamAlias("sensorId")
 	@Column(name = "sensor_id", columnDefinition = "TEXT")
 	@Length(max = 50)
 	private String sensorId;
@@ -99,12 +88,12 @@ public class MLog extends MAEntityAbt implements MLogArduinoInf {
 	}
 	
 	@Override
-	public Date getLogDate() {
+	public Timestamp getLogDate() {
 		return logDate;
 	}
 	
 	@Override
-	public void setLogDate(Date date) {
+	public void setLogDate(Timestamp date) {
 		this.logDate = date;
 	}
 	
