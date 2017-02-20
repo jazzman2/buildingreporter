@@ -4,7 +4,8 @@ dependencies {
     compile project(':buildingreporter-domain')
 
     compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
-    compile group: 'org.hibernate', name: 'hibernate-validator', version: "${hibernateVersion}"
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: "${hibernateValidatorVersion}"
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: "${hibernateValidatorVersion}"
 
     compile group: 'org.apache.commons', name: 'commons-configuration2', version: "${commonConfigurationVersion}"
     compile group: 'org.rxtx', name: 'rxtx', version: "${rxTxVersion}"
